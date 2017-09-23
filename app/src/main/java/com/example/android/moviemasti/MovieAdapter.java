@@ -56,6 +56,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     public void setMovieImageData(ArrayList<String> imageData){
         if(imageData!= null)
             movieImageData = new ArrayList<String>(imageData);
+        notifyDataSetChanged();
     }
 
     public class MovieAdapterViewHolder extends RecyclerView.ViewHolder {
