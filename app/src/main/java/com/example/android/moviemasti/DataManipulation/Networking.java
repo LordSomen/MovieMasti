@@ -2,6 +2,7 @@ package com.example.android.moviemasti.DataManipulation;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
@@ -13,19 +14,41 @@ import javax.net.ssl.HttpsURLConnection;
  */
 
 public class Networking {
-
-    public static String getJSONResponseFromUrl(String responseUrl) throws IOException {
+    //TODO check the response code
+    //TODO add connection time  out
+    public static String getJSONResponseFromUrl(String responseUrl)  {
         String jsonPopularMovieData = null;
         URL httpResponseUrl = makeUrl(responseUrl);
+        HttpsURLConnection httpsURLConnection = null;
         if (httpResponseUrl != null) {
-            HttpsURLConnection httpsURLConnection = (HttpsURLConnection) httpResponseUrl.openConnection();
             try {
-                InputStream inputStream = httpsURLConnection.getInputStream();
-                Scanner scanner = new Scanner(inputStream);
-                scanner.useDelimiter("\\A");
-                if (scanner.hasNext()) {
-                    jsonPopularMovieData = scanner.next();
-                    return jsonPopularMovieData;
+                httpsURLConnection = (HttpsURLConnection) httpResponseUrl.openConnection();
+
+               // httpsURLConnection.setReadTimeout(3000);
+                // Timeout for connection.connect() arbitrarily set to 3000ms.
+                //httpsURLConnection.setConnectTimeout(3000);
+                // For this use case, set HTTP method to GET.
+                httpsURLConnection.setInstanceFollowRedirects(true);
+
+                httpsURLConnection.setUseCaches(true);
+                httpsURLConnection.setDefaultUseCaches(true);
+                httpsURLConnection.setRequestMethod("GET");
+                // Already true by default but setting just in case; needs to be true since this request
+                // is carrying an input (response) body.
+                httpsURLConnection.setDoInput(true);
+                // Open communications link (network traffic occurs here).
+                httpsURLConnection.connect();
+                if(httpsURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    InputStream inputStream = httpsURLConnection.getInputStream();
+                    Scanner scanner = new Scanner(inputStream);
+                    scanner.useDelimiter("\\A");
+                    if (scanner.hasNext()) {
+                        jsonPopularMovieData = scanner.next();
+                        return jsonPopularMovieData;
+                    }
+                }
+                else {
+                    return null;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
