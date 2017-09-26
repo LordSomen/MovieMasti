@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.moviemasti.DataManipulation.JsonDataParsing;
 import com.example.android.moviemasti.DataManipulation.Networking;
@@ -16,7 +17,7 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-public class PopularMoviesActivity extends AppCompatActivity {
+public class PopularMoviesActivity extends AppCompatActivity implements MovieAdapter.MovieOnClickItemHandler {
 
     private final String POPULARITY_URL =
             "https://api.themoviedb.org/3/discover/movie?api_key=532dfe3fbb248c4ecc6f42703334d18e&language=en&sort_by=popularity.desc&include_adult=false&include_video=false";
@@ -24,6 +25,7 @@ public class PopularMoviesActivity extends AppCompatActivity {
     private MovieAdapter movieAdapter;
     private TextView mErrorTextView;
     private ProgressBar mProgressBar;
+    private Toast mToast ;
 
     //TODO make sure the app didn't crash when internet isn't available
 //TODO add progress bar
@@ -39,11 +41,19 @@ public class PopularMoviesActivity extends AppCompatActivity {
         //mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         //mRecyclerView.setHasFixedSize(true);
-        movieAdapter = new MovieAdapter(getApplicationContext());
+        movieAdapter = new MovieAdapter(getApplicationContext() ,this);
         loadMovieData();
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(movieAdapter);
 
+    }
+
+    @Override
+    public void onClickItem(String imageData) {
+        if(mToast!=null)
+            mToast.cancel();
+        mToast = Toast.makeText(this, imageData, Toast.LENGTH_SHORT);
+        mToast.show();
     }
 
     class PopularMoviesDataRequesting extends AsyncTask<String, Void, ArrayList<String>> {
