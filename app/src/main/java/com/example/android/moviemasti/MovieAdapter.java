@@ -19,11 +19,18 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     private ArrayList<String> movieImageData;
     private Context mContext;
-    public MovieAdapter(Context context){
+    private MovieOnClickItemHandler mClickHandler;
+
+
+    public MovieAdapter(Context context , MovieOnClickItemHandler click){
 
         mContext = context;
+        mClickHandler = click;
     }
 
+    interface MovieOnClickItemHandler{
+        void onClickItem(String imageData);
+    }
     @Override
     public MovieAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         Context context = viewGroup.getContext();
@@ -32,7 +39,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         boolean attachToParent = false;
         View movieViewObject = inflater.inflate(itemId, viewGroup,attachToParent);
         MovieAdapterViewHolder movieAdapterViewHolder = new MovieAdapterViewHolder(movieViewObject);
-        return movieAdapterViewHolder;
+         return movieAdapterViewHolder;
     }
 
     @Override
@@ -60,13 +67,21 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         notifyDataSetChanged();
     }
 
-    public class MovieAdapterViewHolder extends RecyclerView.ViewHolder {
+    public class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         final public ImageView movieItemImageView ;
 
         public MovieAdapterViewHolder(View itemView) {
             super(itemView);
             movieItemImageView = (ImageView) itemView.findViewById(R.id.image_items);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+             String imageData = movieImageData.get(getAdapterPosition());
+             mClickHandler.onClickItem(imageData);
+
         }
     }
 }
