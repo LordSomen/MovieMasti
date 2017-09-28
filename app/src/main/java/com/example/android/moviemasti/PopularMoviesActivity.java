@@ -1,5 +1,6 @@
 package com.example.android.moviemasti;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.moviemasti.DataManipulation.JsonDataParsing;
+import com.example.android.moviemasti.DataManipulation.MovieData;
 import com.example.android.moviemasti.DataManipulation.Networking;
 
 import org.json.JSONException;
@@ -27,8 +29,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
     private ProgressBar mProgressBar;
     private Toast mToast ;
 
-    //TODO make sure the app didn't crash when internet isn't available
-//TODO add progress bar
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,10 +37,7 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
         mErrorTextView = (TextView) findViewById(R.id.action_error);
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this ,2);
-        //LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        //mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setLayoutManager(gridLayoutManager);
-        //mRecyclerView.setHasFixedSize(true);
         movieAdapter = new MovieAdapter(getApplicationContext() ,this);
         loadMovieData();
         mRecyclerView.setHasFixedSize(true);
@@ -49,14 +46,16 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
     }
 
     @Override
-    public void onClickItem(String imageData) {
-        if(mToast!=null)
-            mToast.cancel();
-        mToast = Toast.makeText(this, imageData, Toast.LENGTH_SHORT);
-        mToast.show();
+    public void onClickItem(MovieData imageData) {
+        Intent movieIntent = new Intent(this,MovieDetailedDataScrollingActivity.class);
+        Bundle mBundle = new Bundle();
+        mBundle.putParcelable("movieIntentData",imageData);
+        movieIntent.putExtras(mBundle);
+        startActivity(movieIntent);
     }
 
-    class PopularMoviesDataRequesting extends AsyncTask<String, Void, ArrayList<String>> {
+
+    private class PopularMoviesDataRequesting extends AsyncTask<String, Void, ArrayList<MovieData>> {
 
         @Override
         protected void onPreExecute() {
@@ -64,8 +63,8 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
         }
 
         @Override
-        protected ArrayList<String> doInBackground(String... popularMovieUrls) {
-            ArrayList<String> imageMovieDataResult = null;
+        protected ArrayList<MovieData> doInBackground(String... popularMovieUrls) {
+            ArrayList<MovieData> imageMovieDataResult = null;
             try {
                 if (popularMovieUrls != null) {
                     String jsonMovieResult = Networking.getJSONResponseFromUrl(popularMovieUrls[0]);
@@ -82,7 +81,7 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
         }
 
         @Override
-        protected void onPostExecute(ArrayList<String> imageDataResults) {
+        protected void onPostExecute(ArrayList<MovieData> imageDataResults) {
             mProgressBar.setVisibility(View.INVISIBLE);
             if (imageDataResults != null ) {
                 showMovieData();
