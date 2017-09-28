@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.example.android.moviemasti.DataManipulation.MovieData;
 
 import java.util.ArrayList;
 
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder>{
 
-    private ArrayList<String> movieImageData;
+    private ArrayList<MovieData> movieImageData;
     private Context mContext;
     private MovieOnClickItemHandler mClickHandler;
 
@@ -29,7 +30,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     }
 
     interface MovieOnClickItemHandler{
-        void onClickItem(String imageData);
+        void onClickItem(MovieData imageData);
     }
     @Override
     public MovieAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -45,7 +46,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     @Override
     public void onBindViewHolder(MovieAdapterViewHolder holder, int position) {
         if(movieImageData!=null) {
-            String imgUrl = "https://image.tmdb.org/t/p/w500" + movieImageData.get(position);
+            String imgUrl = "https://image.tmdb.org/t/p/w500" + movieImageData.get(position).getMoviePosterPath();
             Glide.with(mContext).load(imgUrl).into(holder.movieItemImageView);
         }
     }
@@ -61,10 +62,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     }
 
-    public void setMovieImageData(ArrayList<String> imageData){
+    public void setMovieImageData(ArrayList<MovieData> imageData){
         if(imageData!= null)
-            movieImageData = new ArrayList<String>(imageData);
-        notifyDataSetChanged();
+            movieImageData = new ArrayList<>(imageData);
+            notifyDataSetChanged();
     }
 
     public class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -79,7 +80,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
         @Override
         public void onClick(View v) {
-             String imageData = movieImageData.get(getAdapterPosition());
+             MovieData imageData = movieImageData.get(getAdapterPosition());
              mClickHandler.onClickItem(imageData);
 
         }
