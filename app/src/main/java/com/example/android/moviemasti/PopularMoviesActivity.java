@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -14,6 +17,7 @@ import android.widget.Toast;
 import com.example.android.moviemasti.DataManipulation.JsonDataParsing;
 import com.example.android.moviemasti.DataManipulation.MovieData;
 import com.example.android.moviemasti.DataManipulation.Networking;
+import com.example.android.moviemasti.MenusManipulation.SortingMovieData;
 
 import org.json.JSONException;
 
@@ -28,11 +32,13 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
     private TextView mErrorTextView;
     private ProgressBar mProgressBar;
     private Toast mToast ;
+    private  ArrayList<MovieData> imageMovieDataResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_popular_movies);
+
         mRecyclerView = (RecyclerView) findViewById(R.id.popular_movie_data_rv);
         mErrorTextView = (TextView) findViewById(R.id.action_error);
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
@@ -64,7 +70,7 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
 
         @Override
         protected ArrayList<MovieData> doInBackground(String... popularMovieUrls) {
-            ArrayList<MovieData> imageMovieDataResult = null;
+
             try {
                 if (popularMovieUrls != null) {
                     String jsonMovieResult = Networking.getJSONResponseFromUrl(popularMovieUrls[0]);
@@ -107,5 +113,30 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
     public void showErrorMessage() {
         mErrorTextView.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.INVISIBLE);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater in = getMenuInflater();
+        in.inflate(R.menu.menu_sorting_movies,menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem){
+        int menuItemId = menuItem.getItemId();
+        switch (menuItemId){
+            case R.id.menu_sorting_popularity:
+               imageMovieDataResult = SortingMovieData.sortAccordingToPopularity(imageMovieDataResult);
+                movieAdapter.setMovieImageData(imageMovieDataResult);
+                return true;
+            case R.id.menu_sorting_rating:
+                imageMovieDataResult = SortingMovieData.sortAccordingToRating(imageMovieDataResult);
+                movieAdapter.setMovieImageData(imageMovieDataResult);
+                return true;
+            default:
+               return super.onOptionsItemSelected(menuItem);
+        }
+
     }
 }
