@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">MovieMasti</string>
     <string name="action_error">error occurred check the internet</string>
+    <string name="title_activity_movie_detailed_data_scrolling">MovieDetailedDataScrollingActivity
+    </string>
+    <string name="menu_sort_action_popularity">Sort:Popularity</string>
+    <string name="menu_sort_action_rating">Sort:Rating</string>
+    <string name="action_settings">Settings</string>
 </resources>
