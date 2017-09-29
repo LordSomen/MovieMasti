@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,7 +39,8 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_popular_movies);
-
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
         mRecyclerView = (RecyclerView) findViewById(R.id.popular_movie_data_rv);
         mErrorTextView = (TextView) findViewById(R.id.action_error);
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
