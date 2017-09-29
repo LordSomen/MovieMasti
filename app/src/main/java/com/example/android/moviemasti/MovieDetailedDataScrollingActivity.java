@@ -7,15 +7,17 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.android.moviemasti.DataManipulation.MovieData;
 
 public class MovieDetailedDataScrollingActivity extends AppCompatActivity {
 
     private TextView mContentTextview;
-    private String intentText;
     private AppBarLayout mAppBarLayout;
+    private ImageView mBackDropImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +36,9 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity {
         });
 
         mContentTextview = (TextView) findViewById(R.id.content_text);
-
+        mBackDropImageView = (ImageView)findViewById(R.id.movie_backdrop_image);
         Bundle intentData = getIntent().getExtras();
-        MovieData movieData = (MovieData)intentData.getParcelable("movieIntentData");
+        MovieData movieData = intentData.getParcelable("movieIntentData");
         if(movieData!=null){
             Long movieId = movieData.getMovieId();
             String movieTitle = movieData.getMovieTitle();
@@ -45,16 +47,16 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity {
             mContentTextview.setText(movieTitle+"\n\n");
             mContentTextview.append(moviePosterPath+"\n\n");
             mContentTextview.append(movieBackdropPath+"\n\n");
+            loadingImage(moviePosterPath);
 
         }
-
     }
 
 
-  /*  public void loadingImage() {
-        if(intentText!=null) {
-            String imgUrl = "https://image.tmdb.org/t/p/w500" + intentText;
-            Glide.with(this).load(imgUrl).into();
+   public void loadingImage(String imgUrlPartBackDrop) {
+        if(imgUrlPartBackDrop!=null) {
+            String imgUrl = "https://image.tmdb.org/t/p/w500" + imgUrlPartBackDrop;
+            Glide.with(this).load(imgUrl).into(mBackDropImageView);
         }
-    }*/
+    }
 }
