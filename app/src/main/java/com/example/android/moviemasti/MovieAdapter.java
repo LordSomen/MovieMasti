@@ -6,9 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.android.moviemasti.DataManipulation.MovieData;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -28,6 +29,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         mContext = context;
         mClickHandler = click;
         setHasStableIds(true);
+
     }
    @Override
     public long getItemId(int position){
@@ -51,7 +53,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     public void onBindViewHolder(MovieAdapterViewHolder holder, int position) {
         if(movieImageData!=null) {
             String imgUrl = "https://image.tmdb.org/t/p/w500" + movieImageData.get(position).getMoviePosterPath();
-            Glide.with(mContext).load(imgUrl).into(holder.movieItemImageView);
+            Picasso.with(mContext).load(imgUrl).into(holder.movieItemImageView);
+            double ratings = movieImageData.get(position).getMovieVotes();
+            holder.mMovieRatings.setText(String.valueOf(ratings));
         }
     }
 
@@ -75,10 +79,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     public class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         final public ImageView movieItemImageView ;
+        final public TextView  mMovieRatings;
 
         public MovieAdapterViewHolder(View itemView) {
             super(itemView);
             movieItemImageView = (ImageView) itemView.findViewById(R.id.image_items);
+            mMovieRatings = (TextView)itemView.findViewById(R.id.movie_rating);
             itemView.setOnClickListener(this);
         }
 
