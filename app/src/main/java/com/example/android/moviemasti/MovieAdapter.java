@@ -27,8 +27,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
         mContext = context;
         mClickHandler = click;
+        setHasStableIds(true);
     }
-
+   @Override
+    public long getItemId(int position){
+        return position;
+    }
     interface MovieOnClickItemHandler{
         void onClickItem(MovieData imageData);
     }
