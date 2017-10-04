@@ -10,8 +10,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+
 import com.example.android.moviemasti.DataManipulation.MovieData;
+import com.squareup.picasso.Picasso;
 
 public class MovieDetailedDataScrollingActivity extends AppCompatActivity {
 
@@ -56,7 +57,7 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity {
    public void loadingImage(String imgUrlPartBackDrop) {
         if(imgUrlPartBackDrop!=null) {
             String imgUrl = "https://image.tmdb.org/t/p/w500" + imgUrlPartBackDrop;
-            Glide.with(this).load(imgUrl).into(mBackDropImageView);
+            Picasso.with(this).load(imgUrl).into(mBackDropImageView);
         }
     }
 }
