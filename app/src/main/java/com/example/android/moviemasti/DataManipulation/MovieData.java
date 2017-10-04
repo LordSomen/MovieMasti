@@ -17,6 +17,7 @@ public class MovieData implements Parcelable{
     private String moviePosterPath;
     private double moviePopularity;
     private String movieBackdropPath;
+    private String movieDescription;
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
         public MovieData createFromParcel(Parcel in) {
@@ -27,13 +28,14 @@ public class MovieData implements Parcelable{
             return new MovieData[size];
         }
     };
-    public MovieData(long id ,double vote , String title , String poster , double popularity , String backDrop){
+    public MovieData(long id ,double vote , String title , String poster , double popularity , String backDrop,String description){
         movieId = id;
         movieVoteAverage = vote;
         movieTitle = title;
         moviePosterPath = poster;
         moviePopularity = popularity;
         movieBackdropPath = backDrop;
+        movieDescription = description;
     }
 
     public long getMovieId(){
@@ -60,6 +62,10 @@ public class MovieData implements Parcelable{
         return movieBackdropPath;
     }
 
+    public String getMovieDescription(){
+        return movieDescription;
+    }
+
     // Parcelling part
     public MovieData(Parcel in) {
         movieId= in.readLong();
@@ -68,6 +74,7 @@ public class MovieData implements Parcelable{
         moviePosterPath = in.readString();
         moviePopularity = in.readDouble();
         movieBackdropPath = in.readString();
+        movieDescription = in.readString();
     }
 
     @Override
@@ -83,6 +90,7 @@ public class MovieData implements Parcelable{
         dest.writeString(moviePosterPath);
         dest.writeDouble(moviePopularity);
         dest.writeString(movieBackdropPath);
+        dest.writeString(movieDescription);
 
     }
 

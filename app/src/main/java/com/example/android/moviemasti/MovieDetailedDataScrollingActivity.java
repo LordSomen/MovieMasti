@@ -15,7 +15,7 @@ import com.example.android.moviemasti.DataManipulation.MovieData;
 
 public class MovieDetailedDataScrollingActivity extends AppCompatActivity {
 
-    private TextView mContentTextview;
+    private TextView mContentTextView;
     private AppBarLayout mAppBarLayout;
     private ImageView mBackDropImageView;
 
@@ -35,21 +35,21 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity {
             }
         });
 
-        mContentTextview = (TextView) findViewById(R.id.content_text);
+        mContentTextView = (TextView) findViewById(R.id.content_text);
         mBackDropImageView = (ImageView)findViewById(R.id.movie_backdrop_image);
         Bundle intentData = getIntent().getExtras();
         MovieData movieData = intentData.getParcelable("movieIntentData");
         if(movieData!=null){
             Long movieId = movieData.getMovieId();
             String movieTitle = movieData.getMovieTitle();
+            String movieDescription = movieData.getMovieDescription();
             String moviePosterPath = movieData.getMoviePosterPath();
             String movieBackdropPath = movieData.getMovieBackdropPath();
-            mContentTextview.setText(movieTitle+"\n\n");
-            mContentTextview.append(moviePosterPath+"\n\n");
-            mContentTextview.append(movieBackdropPath+"\n\n");
-            loadingImage(moviePosterPath);
-
+            getSupportActionBar().setTitle(movieTitle);
+            mContentTextView.setText(movieDescription);
+            loadingImage(movieBackdropPath);
         }
+
     }
 
 

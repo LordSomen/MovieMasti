@@ -17,6 +17,7 @@ public class JsonDataParsing {
         JSONObject popularMovieJson = new JSONObject(jsonPopularMovieData);
         JSONArray movieList = popularMovieJson.getJSONArray("results");
         for(int i=0 ; i<movieList.length() ; i++){
+
             JSONObject movieListItem = movieList.getJSONObject(i);
             String moviePosterPath = movieListItem.getString("poster_path");
             int movieId = movieListItem.getInt("id");
@@ -24,7 +25,8 @@ public class JsonDataParsing {
             double moviePopularity = movieListItem.getDouble("popularity");
             String movieTitle = movieListItem.getString("title");
             String movieBackDropPath = movieListItem.getString("backdrop_path");
-            imageDataArray.add(new MovieData(movieId,movieVoteAverage,movieTitle,moviePosterPath,moviePopularity,movieBackDropPath));
+            String movieDescription = movieListItem.getString("overview");
+            imageDataArray.add(new MovieData(movieId,movieVoteAverage,movieTitle,moviePosterPath,moviePopularity,movieBackDropPath,movieDescription));
         }
         return imageDataArray;
     }
