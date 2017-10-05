@@ -19,6 +19,7 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity {
     private ImageView mBackDropImageView;
     private ImageView mPosterImageView;
     private TextView mMovieTitle;
+    private TextView mMovieReleaseDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity {
         mContentTextView = (TextView) findViewById(R.id.content_text);
         mBackDropImageView = (ImageView)findViewById(R.id.movie_backdrop_image);
         mPosterImageView = (ImageView)findViewById(R.id.movie_poster_image);
+        mMovieReleaseDate = (TextView)findViewById(R.id.movie_release_date);
         Bundle intentData = getIntent().getExtras();
         MovieData movieData = intentData.getParcelable("movieIntentData");
         if(movieData!=null){
@@ -47,9 +49,11 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity {
             String movieDescription = movieData.getMovieDescription();
             String moviePosterPath = movieData.getMoviePosterPath();
             String movieBackdropPath = movieData.getMovieBackdropPath();
+            String movieReleaseDate = movieData.getMovieReleaseDate();
             mMovieTitle.setText(movieTitle);
           //  getSupportActionBar().setWindowTitle()(movieTitle);
             mContentTextView.setText(movieDescription);
+            mMovieReleaseDate.setText(movieReleaseDate);
             loadingMovieBackDropImage(movieBackdropPath);
             loadingMoviePosterImage(moviePosterPath);
         }

@@ -26,7 +26,8 @@ public class JsonDataParsing {
             String movieTitle = movieListItem.getString("title");
             String movieBackDropPath = movieListItem.getString("backdrop_path");
             String movieDescription = movieListItem.getString("overview");
-            imageDataArray.add(new MovieData(movieId,movieVoteAverage,movieTitle,moviePosterPath,moviePopularity,movieBackDropPath,movieDescription));
+            String movieReleaseDate = movieListItem.getString("release_date");
+            imageDataArray.add(new MovieData(movieId,movieVoteAverage,movieTitle,moviePosterPath,moviePopularity,movieBackDropPath,movieDescription,movieReleaseDate));
         }
         return imageDataArray;
     }
