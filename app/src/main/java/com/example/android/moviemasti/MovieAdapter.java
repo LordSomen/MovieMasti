@@ -45,8 +45,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         LayoutInflater inflater = LayoutInflater.from(context);
         boolean attachToParent = false;
         View movieViewObject = inflater.inflate(itemId, viewGroup,attachToParent);
-        MovieAdapterViewHolder movieAdapterViewHolder = new MovieAdapterViewHolder(movieViewObject);
-         return movieAdapterViewHolder;
+        return new MovieAdapterViewHolder(movieViewObject);
     }
 
     @Override
@@ -55,7 +54,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
             String imgUrl = "https://image.tmdb.org/t/p/w500" + movieImageData.get(position).getMoviePosterPath();
             Picasso.with(mContext).load(imgUrl).into(holder.movieItemImageView);
             double ratings = movieImageData.get(position).getMovieVotes();
-            holder.mMovieRatings.setText(String.valueOf(ratings));
+            String rateText = String.valueOf(ratings) + "/10";
+            holder.mMovieRatings.setText(String.valueOf(rateText));
         }
     }
 
