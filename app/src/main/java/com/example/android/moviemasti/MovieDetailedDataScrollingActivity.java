@@ -75,7 +75,7 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity {
                     collapsingToolbarLayout.setTitle(movieTitle);
                     isShow = true;
                 } else if(isShow) {
-                    collapsingToolbarLayout.setTitle("");//carefull there should a space between double quote otherwise it wont work
+                    collapsingToolbarLayout.setTitle("");
                     isShow = false;
                 }
             }
