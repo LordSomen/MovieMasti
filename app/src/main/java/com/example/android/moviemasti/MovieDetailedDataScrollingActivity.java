@@ -2,9 +2,11 @@ package com.example.android.moviemasti;
 
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,19 +17,20 @@ import com.squareup.picasso.Picasso;
 public class MovieDetailedDataScrollingActivity extends AppCompatActivity {
 
     private TextView mContentTextView;
-    private AppBarLayout mAppBarLayout;
+    private AppBarLayout appBarLayout;
     private ImageView mBackDropImageView;
     private ImageView mPosterImageView;
     private TextView mMovieTitle;
     private TextView mMovieReleaseDate;
+    private String movieTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detailed_data_scrolling);
-       //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-       //setSupportActionBar(toolbar);
-        mAppBarLayout = (AppBarLayout)findViewById(R.id.app_bar);
+       Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+       setSupportActionBar(toolbar);
+        setTitle("");
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,19 +48,38 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity {
         MovieData movieData = intentData.getParcelable("movieIntentData");
         if(movieData!=null){
             Long movieId = movieData.getMovieId();
-            String movieTitle = movieData.getMovieTitle();
+            movieTitle = movieData.getMovieTitle();
             String movieDescription = movieData.getMovieDescription();
             String moviePosterPath = movieData.getMoviePosterPath();
             String movieBackdropPath = movieData.getMovieBackdropPath();
             String movieReleaseDate = movieData.getMovieReleaseDate();
             mMovieTitle.setText(movieTitle);
-          //  getSupportActionBar().setWindowTitle()(movieTitle);
             mContentTextView.setText(movieDescription);
             mMovieReleaseDate.setText(movieReleaseDate);
             loadingMovieBackDropImage(movieBackdropPath);
             loadingMoviePosterImage(moviePosterPath);
         }
 
+        final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        appBarLayout = (AppBarLayout)findViewById(R.id.app_bar);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = false;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    collapsingToolbarLayout.setTitle(movieTitle);
+                    isShow = true;
+                } else if(isShow) {
+                    collapsingToolbarLayout.setTitle("");//carefull there should a space between double quote otherwise it wont work
+                    isShow = false;
+                }
+            }
+        });
     }
 
     public void loadingMovieBackDropImage(String imgUrlPartBackDrop) {
@@ -73,4 +95,5 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity {
             Picasso.with(this).load(imgUrl).into(mPosterImageView);
         }
     }
+
 }
