@@ -44,13 +44,43 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/movie_release_date"
+                android:id="@+id/movie_details_release_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_name"
+                android:layout_marginRight="3dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/movie_details_rate"
+                android:textSize="18sp"
+                android:layout_marginTop="5dp"
+             />
+
+
+
+            <TextView
+                android:id="@+id/movie_details_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:layout_marginLeft="5dp"/>
 
         </LinearLayout>
+
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

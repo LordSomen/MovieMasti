@@ -19,6 +19,7 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity {
     private ImageView mPosterImageView;
     private TextView mMovieTitle;
     private TextView mMovieReleaseDate;
+    private TextView mMovieRate;
     private String movieTitle;
 
     @Override
@@ -32,7 +33,8 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity {
         mContentTextView = (TextView) findViewById(R.id.content_text);
         mBackDropImageView = (ImageView)findViewById(R.id.movie_backdrop_image);
         mPosterImageView = (ImageView)findViewById(R.id.movie_poster_image);
-        mMovieReleaseDate = (TextView)findViewById(R.id.movie_release_date);
+        mMovieReleaseDate = (TextView)findViewById(R.id.movie_details_release_date);
+        mMovieRate = (TextView)findViewById(R.id.movie_details_rate);
         Bundle intentData = getIntent().getExtras();
         MovieData movieData = intentData.getParcelable("movieIntentData");
         if(movieData!=null){
@@ -42,9 +44,11 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity {
             String moviePosterPath = movieData.getMoviePosterPath();
             String movieBackdropPath = movieData.getMovieBackdropPath();
             String movieReleaseDate = movieData.getMovieReleaseDate();
+            String movieRate = movieData.getMovieVotes() + "/10";
             mMovieTitle.setText(movieTitle);
             mContentTextView.setText(movieDescription);
             mMovieReleaseDate.setText(movieReleaseDate);
+            mMovieRate.setText(movieRate);
             loadingMovieBackDropImage(movieBackdropPath);
             loadingMoviePosterImage(moviePosterPath);
         }
