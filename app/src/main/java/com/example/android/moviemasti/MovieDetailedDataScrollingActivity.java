@@ -11,8 +11,10 @@ import android.widget.TextView;
 import com.example.android.moviemasti.DataManipulation.MovieData;
 import com.squareup.picasso.Picasso;
 
+@SuppressWarnings("ALL")
 public class MovieDetailedDataScrollingActivity extends AppCompatActivity {
 
+    @SuppressWarnings("FieldCanBeLocal")
     private TextView mContentTextView;
     private AppBarLayout appBarLayout;
     private ImageView mBackDropImageView;
@@ -78,14 +80,14 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity {
     public void loadingMovieBackDropImage(String imgUrlPartBackDrop) {
         if(imgUrlPartBackDrop!=null) {
             String imgUrl = "https://image.tmdb.org/t/p/w500" + imgUrlPartBackDrop;
-            Picasso.with(this).load(imgUrl).into(mBackDropImageView);
+            Picasso.with(this).load(imgUrl).placeholder(R.drawable.placeholder3).into(mBackDropImageView);
         }
     }
 
     public void loadingMoviePosterImage(String imgUrlPartPoster){
         if(imgUrlPartPoster!=null) {
             String imgUrl = "https://image.tmdb.org/t/p/w500" + imgUrlPartPoster;
-            Picasso.with(this).load(imgUrl).into(mPosterImageView);
+            Picasso.with(this).load(imgUrl).placeholder(R.drawable.placeholder3).into(mPosterImageView);
         }
     }
 

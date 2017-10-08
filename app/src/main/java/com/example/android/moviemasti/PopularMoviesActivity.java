@@ -27,14 +27,14 @@ import java.util.ArrayList;
 public class PopularMoviesActivity extends AppCompatActivity implements MovieAdapter.MovieOnClickItemHandler {
 
     //TODO place your api key in the url
+    @SuppressWarnings("FieldCanBeLocal")
     private final String POPULARITY_URL =
-            "https://api.themoviedb.org/3/discover/movie?api_key=Replace with your own api key&language=en&sort_by=popularity.desc&include_adult=false&include_video=false";
+            "https://api.themoviedb.org/3/discover/movie?api_key=532dfe3fbb248c4ecc6f42703334d18e&language=en&sort_by=popularity.desc&include_adult=false&include_video=false";
     private RecyclerView mRecyclerView;
     private MovieAdapter movieAdapter;
     private TextView mErrorTextView;
     private ProgressBar mProgressBar;
-    private Toast mToast ;
-    private  ArrayList<MovieData> imageMovieDataResult;
+    private ArrayList<MovieData> imageMovieDataResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +45,9 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
         mRecyclerView = (RecyclerView) findViewById(R.id.popular_movie_data_rv);
         mErrorTextView = (TextView) findViewById(R.id.action_error);
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this ,2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
-        movieAdapter = new MovieAdapter(getApplicationContext() ,this);
+        movieAdapter = new MovieAdapter(getApplicationContext(), this);
         loadMovieData();
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(movieAdapter);
@@ -56,51 +56,11 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
 
     @Override
     public void onClickItem(MovieData imageData) {
-        Intent movieIntent = new Intent(this,MovieDetailedDataScrollingActivity.class);
+        Intent movieIntent = new Intent(this, MovieDetailedDataScrollingActivity.class);
         Bundle mBundle = new Bundle();
-        mBundle.putParcelable("movieIntentData",imageData);
+        mBundle.putParcelable("movieIntentData", imageData);
         movieIntent.putExtras(mBundle);
         startActivity(movieIntent);
-    }
-
-
-    private class PopularMoviesDataRequesting extends AsyncTask<String, Void, ArrayList<MovieData>> {
-
-        @Override
-        protected void onPreExecute() {
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected ArrayList<MovieData> doInBackground(String... popularMovieUrls) {
-
-            try {
-                if (popularMovieUrls != null) {
-                    String jsonMovieResult = Networking.getJSONResponseFromUrl(popularMovieUrls[0]);
-                    if(jsonMovieResult!=null) {
-                        imageMovieDataResult = JsonDataParsing.getDataForPopularity(jsonMovieResult);
-                        return imageMovieDataResult;
-                    }
-                }
-            }
-            catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return imageMovieDataResult;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<MovieData> imageDataResults) {
-            mProgressBar.setVisibility(View.INVISIBLE);
-            if (imageDataResults != null ) {
-                showMovieData();
-                movieAdapter.setMovieImageData(imageDataResults);
-            } else {
-                showErrorMessage();
-            }
-
-        }
-
     }
 
     public void loadMovieData() {
@@ -118,27 +78,73 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
         mRecyclerView.setVisibility(View.INVISIBLE);
     }
 
-
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater in = getMenuInflater();
-        in.inflate(R.menu.menu_sorting_movies,menu);
+        in.inflate(R.menu.menu_sorting_movies, menu);
         return true;
     }
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem){
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
         int menuItemId = menuItem.getItemId();
-        switch (menuItemId){
+        switch (menuItemId) {
             case R.id.menu_sorting_popularity:
-               imageMovieDataResult = SortingMovieData.sortAccordingToPopularity(imageMovieDataResult);
-                movieAdapter.setMovieImageData(imageMovieDataResult);
+                if (mErrorTextView.getVisibility() != View.VISIBLE) {
+                    imageMovieDataResult = SortingMovieData.sortAccordingToPopularity(imageMovieDataResult);
+                    movieAdapter.setMovieImageData(imageMovieDataResult);
+                }else {
+                    Toast.makeText(this, "No Data To Sort", Toast.LENGTH_SHORT).show();
+                }
                 return true;
             case R.id.menu_sorting_rating:
-                imageMovieDataResult = SortingMovieData.sortAccordingToRating(imageMovieDataResult);
-                movieAdapter.setMovieImageData(imageMovieDataResult);
+                if (mErrorTextView.getVisibility() != View.VISIBLE) {
+                    imageMovieDataResult = SortingMovieData.sortAccordingToRating(imageMovieDataResult);
+                    movieAdapter.setMovieImageData(imageMovieDataResult);
+                }else {
+                    Toast.makeText(this, "No Data To Sort", Toast.LENGTH_SHORT).show();
+                }
                 return true;
             default:
-               return super.onOptionsItemSelected(menuItem);
+                return super.onOptionsItemSelected(menuItem);
+        }
+
+    }
+
+    private class PopularMoviesDataRequesting extends AsyncTask<String, Void, ArrayList<MovieData>> {
+
+        @Override
+        protected void onPreExecute() {
+            mProgressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected ArrayList<MovieData> doInBackground(String... popularMovieUrls) {
+
+            try {
+                if (popularMovieUrls != null) {
+                    String jsonMovieResult = Networking.getJSONResponseFromUrl(popularMovieUrls[0]);
+                    if (jsonMovieResult != null) {
+                        imageMovieDataResult = JsonDataParsing.getDataForPopularity(jsonMovieResult);
+                        return imageMovieDataResult;
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return imageMovieDataResult;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<MovieData> imageDataResults) {
+            mProgressBar.setVisibility(View.INVISIBLE);
+            if (imageDataResults != null) {
+                showMovieData();
+                movieAdapter.setMovieImageData(imageDataResults);
+            } else {
+                showErrorMessage();
+            }
+
         }
 
     }

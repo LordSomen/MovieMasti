@@ -52,7 +52,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     public void onBindViewHolder(MovieAdapterViewHolder holder, int position) {
         if(movieImageData!=null) {
             String imgUrl = "https://image.tmdb.org/t/p/w500" + movieImageData.get(position).getMoviePosterPath();
-            Picasso.with(mContext).load(imgUrl).into(holder.movieItemImageView);
+            Picasso.with(mContext).load(imgUrl).placeholder(R.drawable.placeholder3).into(holder.movieItemImageView);
             double ratings = movieImageData.get(position).getMovieVotes();
             String rateText = String.valueOf(ratings) + "/10";
             holder.mMovieRatings.setText(String.valueOf(rateText));

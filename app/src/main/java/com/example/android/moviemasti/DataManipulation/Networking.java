@@ -53,7 +53,8 @@ public class Networking {
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                httpsURLConnection.disconnect();
+                if(httpsURLConnection!=null)
+                    httpsURLConnection.disconnect();
             }
         }
         return jsonPopularMovieData;
