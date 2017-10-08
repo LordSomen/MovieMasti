@@ -29,7 +29,7 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
     //TODO place your api key in the url
     @SuppressWarnings("FieldCanBeLocal")
     private final String POPULARITY_URL =
-            "https://api.themoviedb.org/3/discover/movie?api_key=532dfe3fbb248c4ecc6f42703334d18e&language=en&sort_by=popularity.desc&include_adult=false&include_video=false";
+            "https://api.themoviedb.org/3/discover/movie?api_key=_PUT_YOUR_API_KEY_HERE_&language=en&sort_by=popularity.desc&include_adult=false&include_video=false";
     private RecyclerView mRecyclerView;
     private MovieAdapter movieAdapter;
     private TextView mErrorTextView;
