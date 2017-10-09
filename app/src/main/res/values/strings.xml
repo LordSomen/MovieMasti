@@ -1,14 +1,18 @@
 <resources>
+
+    <!-- PopularMovies Activity-->
     <string name="app_name">MovieMasti</string>
-    <string name="action_error">error occurred check the internet</string>
-    <string name="title_activity_movie_detailed_data_scrolling">MovieDetailedDataScrollingActivity
-    </string>
+    <string name="action_error">error occurred check the internet!!</string>
+    <string name="reload_button">RELOAD</string>
+    <string name="movies_rate">Rate:</string>
     <string name="menu_sort_action_popularity">Sort:Popularity</string>
     <string name="menu_sort_action_rating">Sort:Rating</string>
     <string name="action_settings">Settings</string>
+
+    <!-- MovieDetails Activity-->
+    <string name="title_activity_movie_detailed_data_scrolling">MovieDetailedDataScrollingActivity</string>
     <string name="movie_details_description">Description</string>
     <string name="movie_details_release_date">Release Date :</string>
     <string name="movie_details_rate">Rating :</string>
 
-    <string name="movies_rate">Rate:</string>
 </resources>

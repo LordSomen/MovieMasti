@@ -11,8 +11,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.moviemasti.DataManipulation.JsonDataParsing;
@@ -32,11 +33,15 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
     //TODO place your api key in the url
 
     private final String POPULARITY_URL =
-            "https://api.themoviedb.org/3/movie/popular?api_key=_ADD_THE_API_KEY_HERE_";
+            "https://api.themoviedb.org/3/movie/popular?api_key=532dfe3fbb248c4ecc6f42703334d18e";
+    private final String TOP_RATED_URL =
+            "https://api.themoviedb.org/3/movie/top_rated?api_key=532dfe3fbb248c4ecc6f42703334d18e";
+
     @BindView(R.id.popular_movie_data_rv) RecyclerView mRecyclerView;
     private MovieAdapter movieAdapter;
-    @BindView(R.id.action_error)  TextView mErrorTextView;
+    @BindView(R.id.action_error) LinearLayout mErrorLayout;
     @BindView(R.id.progress_bar)  ProgressBar mProgressBar;
+    @BindView(R.id.reload_button) Button mReloadButton;
     private ArrayList<MovieData> imageMovieDataResult;
 
     @Override
@@ -49,9 +54,18 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         movieAdapter = new MovieAdapter(getApplicationContext(), this);
-        loadMovieData();
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(movieAdapter);
+        mReloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadMovieData(POPULARITY_URL);
+            }
+        });
+
+        loadMovieData(POPULARITY_URL);
+
+
 
     }
 
@@ -64,18 +78,18 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
         startActivity(movieIntent);
     }
 
-    public void loadMovieData() {
+    public void loadMovieData(String movieApiUrl) {
         showMovieData();
-        new PopularMoviesDataRequesting().execute(POPULARITY_URL);
+        new PopularMoviesDataRequesting().execute(movieApiUrl);
     }
 
     public void showMovieData() {
-        mErrorTextView.setVisibility(View.INVISIBLE);
+        mErrorLayout.setVisibility(View.INVISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     public void showErrorMessage() {
-        mErrorTextView.setVisibility(View.VISIBLE);
+        mErrorLayout.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.INVISIBLE);
     }
 
@@ -91,7 +105,8 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
         int menuItemId = menuItem.getItemId();
         switch (menuItemId) {
             case R.id.menu_sorting_popularity:
-                if (mErrorTextView.getVisibility() != View.VISIBLE) {
+                loadMovieData(POPULARITY_URL);
+                if (mErrorLayout.getVisibility() != View.VISIBLE) {
                     imageMovieDataResult = SortingMovieData.sortAccordingToPopularity(imageMovieDataResult);
                     movieAdapter.setMovieImageData(imageMovieDataResult);
                 }else {
@@ -99,7 +114,8 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
                 }
                 return true;
             case R.id.menu_sorting_rating:
-                if (mErrorTextView.getVisibility() != View.VISIBLE) {
+                loadMovieData(TOP_RATED_URL);
+                if (mErrorLayout.getVisibility() != View.VISIBLE) {
                     imageMovieDataResult = SortingMovieData.sortAccordingToRating(imageMovieDataResult);
                     movieAdapter.setMovieImageData(imageMovieDataResult);
                 }else {
