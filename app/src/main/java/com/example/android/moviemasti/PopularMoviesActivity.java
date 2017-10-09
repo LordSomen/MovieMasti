@@ -33,9 +33,9 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
     //TODO place your api key in the url
 
     private final String POPULARITY_URL =
-            "https://api.themoviedb.org/3/movie/popular?api_key=532dfe3fbb248c4ecc6f42703334d18e";
+            "https://api.themoviedb.org/3/movie/popular?api_key=_ADD_YOUR_API_KEY_HERE_";
     private final String TOP_RATED_URL =
-            "https://api.themoviedb.org/3/movie/top_rated?api_key=532dfe3fbb248c4ecc6f42703334d18e";
+            "https://api.themoviedb.org/3/movie/top_rated?api_key=_ADD_YOUR_API_KEY_HERE_";
 
     @BindView(R.id.popular_movie_data_rv) RecyclerView mRecyclerView;
     private MovieAdapter movieAdapter;
