@@ -30,9 +30,9 @@ import butterknife.ButterKnife;
 public class PopularMoviesActivity extends AppCompatActivity implements MovieAdapter.MovieOnClickItemHandler {
 
     //TODO place your api key in the url
-    @SuppressWarnings("FieldCanBeLocal")
+
     private final String POPULARITY_URL =
-            "https://api.themoviedb.org/3/movie/popular?api_key=532dfe3fbb248c4ecc6f42703334d18e";
+            "https://api.themoviedb.org/3/movie/popular?api_key=_ADD_THE_API_KEY_HERE_";
     @BindView(R.id.popular_movie_data_rv) RecyclerView mRecyclerView;
     private MovieAdapter movieAdapter;
     @BindView(R.id.action_error)  TextView mErrorTextView;
