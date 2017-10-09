@@ -13,6 +13,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by soumyajit on 22/9/17.
  */
@@ -52,7 +55,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     public void onBindViewHolder(MovieAdapterViewHolder holder, int position) {
         if(movieImageData!=null) {
             String imgUrl = "https://image.tmdb.org/t/p/w500" + movieImageData.get(position).getMoviePosterPath();
-            Picasso.with(mContext).load(imgUrl).placeholder(R.drawable.placeholder3).into(holder.movieItemImageView);
+            Picasso.with(mContext).load(imgUrl)
+                    .placeholder(R.drawable.placeholder3)
+                    .error(R.drawable.placeholder3)
+                    .into(holder.movieItemImageView);
             double ratings = movieImageData.get(position).getMovieVotes();
             String rateText = String.valueOf(ratings) + "/10";
             holder.mMovieRatings.setText(String.valueOf(rateText));
@@ -78,13 +84,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     public class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        final public ImageView movieItemImageView ;
-        final public TextView  mMovieRatings;
+        @BindView(R.id.image_items)  public ImageView movieItemImageView ;
+        @BindView(R.id.movie_rating)  public TextView  mMovieRatings;
 
         public MovieAdapterViewHolder(View itemView) {
             super(itemView);
-            movieItemImageView = (ImageView) itemView.findViewById(R.id.image_items);
-            mMovieRatings = (TextView)itemView.findViewById(R.id.movie_rating);
+            ButterKnife.bind(this,itemView);
             itemView.setOnClickListener(this);
         }
 

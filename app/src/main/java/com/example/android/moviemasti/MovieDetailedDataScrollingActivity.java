@@ -11,32 +11,30 @@ import android.widget.TextView;
 import com.example.android.moviemasti.DataManipulation.MovieData;
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 @SuppressWarnings("ALL")
 public class MovieDetailedDataScrollingActivity extends AppCompatActivity {
 
     @SuppressWarnings("FieldCanBeLocal")
-    private TextView mContentTextView;
-    private AppBarLayout appBarLayout;
-    private ImageView mBackDropImageView;
-    private ImageView mPosterImageView;
-    private TextView mMovieTitle;
-    private TextView mMovieReleaseDate;
-    private TextView mMovieRate;
+    @BindView(R.id.content_text) TextView mContentTextView;
+    @BindView(R.id.app_bar) AppBarLayout appBarLayout;
+    @BindView(R.id.movie_backdrop_image) ImageView mBackDropImageView;
+    @BindView(R.id.movie_poster_image) ImageView mPosterImageView;
+    @BindView(R.id.movie_title) TextView mMovieTitle;
+    @BindView(R.id.movie_details_release_date)  TextView mMovieReleaseDate;
+    @BindView(R.id.movie_details_rate)  TextView mMovieRate;
     private String movieTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detailed_data_scrolling);
+        ButterKnife.bind(this);
        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
        setSupportActionBar(toolbar);
         setTitle("");
-        mMovieTitle = (TextView)findViewById(R.id.movie_title);
-        mContentTextView = (TextView) findViewById(R.id.content_text);
-        mBackDropImageView = (ImageView)findViewById(R.id.movie_backdrop_image);
-        mPosterImageView = (ImageView)findViewById(R.id.movie_poster_image);
-        mMovieReleaseDate = (TextView)findViewById(R.id.movie_details_release_date);
-        mMovieRate = (TextView)findViewById(R.id.movie_details_rate);
         Bundle intentData = getIntent().getExtras();
         MovieData movieData = intentData.getParcelable("movieIntentData");
         if(movieData!=null){
@@ -56,7 +54,6 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity {
         }
 
         final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-        appBarLayout = (AppBarLayout)findViewById(R.id.app_bar);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = false;
             int scrollRange = -1;

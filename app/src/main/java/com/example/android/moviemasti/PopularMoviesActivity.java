@@ -24,27 +24,28 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class PopularMoviesActivity extends AppCompatActivity implements MovieAdapter.MovieOnClickItemHandler {
 
     //TODO place your api key in the url
     @SuppressWarnings("FieldCanBeLocal")
     private final String POPULARITY_URL =
-            "https://api.themoviedb.org/3/discover/movie?api_key=_PUT_YOUR_API_KEY_HERE_&language=en&sort_by=popularity.desc&include_adult=false&include_video=false";
-    private RecyclerView mRecyclerView;
+            "https://api.themoviedb.org/3/movie/popular?api_key=532dfe3fbb248c4ecc6f42703334d18e";
+    @BindView(R.id.popular_movie_data_rv) RecyclerView mRecyclerView;
     private MovieAdapter movieAdapter;
-    private TextView mErrorTextView;
-    private ProgressBar mProgressBar;
+    @BindView(R.id.action_error)  TextView mErrorTextView;
+    @BindView(R.id.progress_bar)  ProgressBar mProgressBar;
     private ArrayList<MovieData> imageMovieDataResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_popular_movies);
+        ButterKnife.bind(this);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-        mRecyclerView = (RecyclerView) findViewById(R.id.popular_movie_data_rv);
-        mErrorTextView = (TextView) findViewById(R.id.action_error);
-        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         movieAdapter = new MovieAdapter(getApplicationContext(), this);
