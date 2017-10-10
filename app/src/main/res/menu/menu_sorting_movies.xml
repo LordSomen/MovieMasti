@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".PopularMoviesActivity">
-<item
-    android:id="@+id/menu_sorting_popularity"
-    android:title="@string/menu_sort_action_popularity"
-    app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_sorting_popularity"
+        android:title="@string/menu_sort_action_popularity"
+        app:showAsAction="never" />
     <item
         android:id="@+id/menu_sorting_rating"
         android:title="@string/menu_sort_action_rating"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 </menu>

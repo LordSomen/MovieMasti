@@ -1,4 +1,4 @@
-package com.example.android.moviemasti.DataManipulation;
+package com.example.android.moviemasti.datamanipulation;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +14,7 @@ import javax.net.ssl.HttpsURLConnection;
  */
 
 public class Networking {
-    public static String getJSONResponseFromUrl(String responseUrl)  {
+    public static String getJSONResponseFromUrl(String responseUrl) {
         String jsonPopularMovieData = null;
         URL httpResponseUrl = makeUrl(responseUrl);
         HttpsURLConnection httpsURLConnection = null;
@@ -31,7 +31,7 @@ public class Networking {
                 httpsURLConnection.setDoInput(true);
 
                 httpsURLConnection.connect();
-                if(httpsURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                if (httpsURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     InputStream inputStream = httpsURLConnection.getInputStream();
                     Scanner scanner = new Scanner(inputStream);
                     scanner.useDelimiter("\\A");
@@ -39,14 +39,13 @@ public class Networking {
                         jsonPopularMovieData = scanner.next();
                         return jsonPopularMovieData;
                     }
-                }
-                else {
+                } else {
                     return null;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                if(httpsURLConnection!=null)
+                if (httpsURLConnection != null)
                     httpsURLConnection.disconnect();
             }
         }

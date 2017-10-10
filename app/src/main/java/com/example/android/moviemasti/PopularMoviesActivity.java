@@ -16,10 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.android.moviemasti.DataManipulation.JsonDataParsing;
-import com.example.android.moviemasti.DataManipulation.MovieData;
-import com.example.android.moviemasti.DataManipulation.Networking;
-import com.example.android.moviemasti.MenusManipulation.SortingMovieData;
+import com.example.android.moviemasti.datamanipulation.JsonDataParsing;
+import com.example.android.moviemasti.datamanipulation.MovieData;
+import com.example.android.moviemasti.datamanipulation.Networking;
 
 import org.json.JSONException;
 
@@ -33,15 +32,19 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
     //TODO place your api key in the url
 
     private final String POPULARITY_URL =
-            "https://api.themoviedb.org/3/movie/popular?api_key=_ADD_YOUR_API_KEY_HERE_";
+            "https://api.themoviedb.org/3/movie/popular?api_key=532dfe3fbb248c4ecc6f42703334d18e";
     private final String TOP_RATED_URL =
-            "https://api.themoviedb.org/3/movie/top_rated?api_key=_ADD_YOUR_API_KEY_HERE_";
+            "https://api.themoviedb.org/3/movie/top_rated?api_key=532dfe3fbb248c4ecc6f42703334d18e";
 
-    @BindView(R.id.popular_movie_data_rv) RecyclerView mRecyclerView;
+    @BindView(R.id.popular_movie_data_rv)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.action_error)
+    LinearLayout mErrorLayout;
+    @BindView(R.id.progress_bar)
+    ProgressBar mProgressBar;
+    @BindView(R.id.reload_button)
+    Button mReloadButton;
     private MovieAdapter movieAdapter;
-    @BindView(R.id.action_error) LinearLayout mErrorLayout;
-    @BindView(R.id.progress_bar)  ProgressBar mProgressBar;
-    @BindView(R.id.reload_button) Button mReloadButton;
     private ArrayList<MovieData> imageMovieDataResult;
 
     @Override
@@ -66,7 +69,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
         loadMovieData(POPULARITY_URL);
 
 
-
     }
 
     @Override
@@ -79,7 +81,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
     }
 
     public void loadMovieData(String movieApiUrl) {
-        showMovieData();
         new PopularMoviesDataRequesting().execute(movieApiUrl);
     }
 
@@ -106,20 +107,14 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
         switch (menuItemId) {
             case R.id.menu_sorting_popularity:
                 loadMovieData(POPULARITY_URL);
-                if (mErrorLayout.getVisibility() != View.VISIBLE) {
-                    imageMovieDataResult = SortingMovieData.sortAccordingToPopularity(imageMovieDataResult);
-                    movieAdapter.setMovieImageData(imageMovieDataResult);
-                }else {
-                    Toast.makeText(this, "No Data To Sort", Toast.LENGTH_SHORT).show();
+                if (mErrorLayout.getVisibility() == View.VISIBLE) {
+                    Toast.makeText(this, getString(R.string.sort_toast), Toast.LENGTH_SHORT).show();
                 }
                 return true;
             case R.id.menu_sorting_rating:
                 loadMovieData(TOP_RATED_URL);
-                if (mErrorLayout.getVisibility() != View.VISIBLE) {
-                    imageMovieDataResult = SortingMovieData.sortAccordingToRating(imageMovieDataResult);
-                    movieAdapter.setMovieImageData(imageMovieDataResult);
-                }else {
-                    Toast.makeText(this, "No Data To Sort", Toast.LENGTH_SHORT).show();
+                if (mErrorLayout.getVisibility() == View.VISIBLE) {
+                    Toast.makeText(this, getString(R.string.sort_toast), Toast.LENGTH_SHORT).show();
                 }
                 return true;
             default:

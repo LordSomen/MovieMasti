@@ -60,27 +60,25 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_name"
+                android:layout_marginEnd="3dp"
                 android:layout_marginRight="3dp"
-                android:layout_marginEnd="3dp"/>
+                android:src="@drawable/ic_action_name" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/movie_details_rate"
-                android:textSize="18sp"
                 android:layout_marginTop="5dp"
-             />
-
+                android:text="@string/movie_details_rate"
+                android:textSize="18sp" />
 
 
             <TextView
                 android:id="@+id/movie_details_rate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_marginLeft="5dp"
-                android:layout_marginStart="5dp"/>
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp" />
 
         </LinearLayout>
 

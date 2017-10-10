@@ -1,4 +1,4 @@
-package com.example.android.moviemasti.DataManipulation;
+package com.example.android.moviemasti.datamanipulation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,12 +12,11 @@ import java.util.ArrayList;
 
 public class JsonDataParsing {
 
-    public static ArrayList<MovieData> getDataForPopularity(String jsonPopularMovieData) throws JSONException{
+    public static ArrayList<MovieData> getDataForPopularity(String jsonPopularMovieData) throws JSONException {
         ArrayList<MovieData> imageDataArray = new ArrayList<>();
         JSONObject popularMovieJson = new JSONObject(jsonPopularMovieData);
         JSONArray movieList = popularMovieJson.getJSONArray("results");
-        for(int i=0 ; i<movieList.length() ; i++){
-
+        for (int i = 0; i < movieList.length(); i++) {
             JSONObject movieListItem = movieList.getJSONObject(i);
             String moviePosterPath = movieListItem.getString("poster_path");
             int movieId = movieListItem.getInt("id");
@@ -27,7 +26,7 @@ public class JsonDataParsing {
             String movieBackDropPath = movieListItem.getString("backdrop_path");
             String movieDescription = movieListItem.getString("overview");
             String movieReleaseDate = movieListItem.getString("release_date");
-            imageDataArray.add(new MovieData(movieId,movieVoteAverage,movieTitle,moviePosterPath,moviePopularity,movieBackDropPath,movieDescription,movieReleaseDate));
+            imageDataArray.add(new MovieData(movieId, movieVoteAverage, movieTitle, moviePosterPath, moviePopularity, movieBackDropPath, movieDescription, movieReleaseDate));
         }
         return imageDataArray;
     }
