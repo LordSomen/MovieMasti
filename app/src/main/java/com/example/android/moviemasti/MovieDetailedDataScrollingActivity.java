@@ -16,8 +16,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.android.moviemasti.adapters.ReviewsAdapter;
 import com.example.android.moviemasti.adapters.VideoAdapter;
 import com.example.android.moviemasti.datamanipulation.JsonDataParsing;
 import com.example.android.moviemasti.datamanipulation.MovieData;
@@ -50,10 +50,15 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
     @BindView(R.id.movie_details_rate)
     TextView mMovieRate;
     @BindView(R.id.recycler_view_video)
-    RecyclerView detailsRecyclerView;
+    RecyclerView videoRecyclerView;
+    @BindView(R.id.recycler_view_review)
+    RecyclerView reviewRecyclerView;
     private String movieTitle;
     private VideoAdapter videoAdapter;
-    private final static int MOVIE_DETAILS_LOADER = 2416;
+    private ReviewsAdapter reviewsAdapter;
+    private final static int MOVIE_VIDEO_LOADER = 2416;
+    private final static int MOVIE_REVIEW_LOADER = 1600;
+
     private final static String MOVIE_CALL = "movies";
     private final static String MOVIE_VIDEO_CALL = "videos";
     private final static String MOVIE_REVIEW_CALL = "reviews";
@@ -107,13 +112,20 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
                 }
             }
         });
-        videoAdapter = new VideoAdapter(this);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext()
+        videoAdapter = new VideoAdapter(getApplicationContext(),this);
+        reviewsAdapter = new ReviewsAdapter(this);
+        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getApplicationContext()
                 ,LinearLayoutManager.HORIZONTAL,false);
-        detailsRecyclerView.setLayoutManager(linearLayoutManager);
-        detailsRecyclerView.setAdapter(videoAdapter);
+        LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getApplicationContext()
+                ,LinearLayoutManager.VERTICAL,false);
+        videoRecyclerView.setLayoutManager(linearLayoutManager1);
+        videoRecyclerView.setAdapter(videoAdapter);
+        reviewRecyclerView.setLayoutManager(linearLayoutManager2);
+        reviewRecyclerView.setAdapter(reviewsAdapter);
         String movieVideoUrl = MOVIE_URL + movieId + "/" + MOVIE_VIDEO_CALL + MOVIE_API;
-        loadData(movieVideoUrl);
+        String movieReviewUrl = MOVIE_URL + movieId + "/" + MOVIE_REVIEW_CALL + MOVIE_API;
+        loadData(movieVideoUrl,MOVIE_VIDEO_LOADER);
+        loadData(movieReviewUrl,MOVIE_REVIEW_LOADER);
     }
 
     public void loadingMovieBackDropImage(String imgUrlPartBackDrop) {
@@ -134,20 +146,20 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
         }
     }
 
-    public void loadData(String url) {
+    public void loadData(String url,int LoaderConstant) {
         Bundle bundle = new Bundle();
         bundle.putString(MOVIE_CALL, url);
         LoaderManager loaderManager = getLoaderManager();
         Loader<ArrayList<MovieDetails>> movieDetailsLoader = loaderManager
-                .getLoader(MOVIE_DETAILS_LOADER);
+                .getLoader(LoaderConstant);
         if (movieDetailsLoader == null)
-            loaderManager.initLoader(MOVIE_DETAILS_LOADER, bundle, this);
+            loaderManager.initLoader(LoaderConstant, bundle, this);
         else
-            loaderManager.restartLoader(MOVIE_DETAILS_LOADER, bundle, this);
+            loaderManager.restartLoader(LoaderConstant, bundle, this);
     }
 
     @Override
-    public Loader<ArrayList<MovieDetails>> onCreateLoader(int id, final Bundle args) {
+    public Loader<ArrayList<MovieDetails>> onCreateLoader(final int id, final Bundle args) {
         return new AsyncTaskLoader<ArrayList<MovieDetails>>(this) {
             @Override
             protected void onStartLoading() {
@@ -161,9 +173,12 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
                 Log.i("MovieDetails",apiUrl);
                 ArrayList<MovieDetails> movieDetailsArrayList = null;
                 try {
-                    String jsonMovieResult = Networking.getJSONResponseFromUrl(apiUrl);
-                    movieDetailsArrayList = JsonDataParsing.getVideoData(jsonMovieResult);
 
+                    String jsonMovieResult = Networking.getJSONResponseFromUrl(apiUrl);
+                    if(id == MOVIE_VIDEO_LOADER)
+                        movieDetailsArrayList = JsonDataParsing.getVideoData(jsonMovieResult);
+                    else if(id == MOVIE_REVIEW_LOADER)
+                        movieDetailsArrayList = JsonDataParsing.getReviewData(jsonMovieResult);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -175,9 +190,10 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
     @Override
     public void onLoadFinished(Loader<ArrayList<MovieDetails>> loader, ArrayList<MovieDetails> data) {
         if (data != null && data.size() != 0) {
-            videoAdapter.setArrayList(data);
-        } else {
-            Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG).show();
+            if(loader.getId() == MOVIE_VIDEO_LOADER)
+                videoAdapter.setArrayList(data);
+            else if(loader.getId() == MOVIE_REVIEW_LOADER)
+                reviewsAdapter.setArrayListReview(data);
         }
     }
 

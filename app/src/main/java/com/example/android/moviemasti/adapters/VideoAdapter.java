@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.android.moviemasti.R;
 import com.example.android.moviemasti.pojo.MovieDetails;
@@ -28,8 +27,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoHolder>
     private ArrayList<MovieDetails> videoDetailsArrayList;
     private OnVideoClickHandler videoClickHandler;
 
-    public VideoAdapter(Context context) {
+    public VideoAdapter(Context context,OnVideoClickHandler click) {
         mContext = context;
+        videoClickHandler = click;
     }
 
     public interface OnVideoClickHandler {
@@ -53,7 +53,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoHolder>
                     .placeholder(R.drawable.placeholder3)
                     .error(R.drawable.placeholder3)
                     .into(holder.videoImageView);
-            holder.videoTextView.setText(movieDetails.getVideoName());
         }
     }
 
@@ -77,8 +76,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoHolder>
 
         @BindView(R.id.video_image_view)
         ImageView videoImageView;
-        @BindView(R.id.video_text_view)
-        TextView videoTextView;
 
         public VideoHolder(View itemView) {
             super(itemView);

@@ -17,6 +17,7 @@
     <string name="movie_details_rate">Rating :</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="movie_details_videos">Trailers</string>
+    <string name="movie_details_review_item_author_label">Author:</string>
     <!--NavigationDrawer-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

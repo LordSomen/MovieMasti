@@ -6,19 +6,20 @@ package com.example.android.moviemasti.pojo;
 public class MovieDetails {
 
     String showVideoKey;
-    String showReviews;
     String videoName;
     String videoSite;
-    public MovieDetails(String key,String name , String site ,String reviews){
+    String reviewAuthor;
+    String reviewContent;
+    String reviewUrl;
+    public MovieDetails(String key,String name , String site ,String author,String content , String url){
         showVideoKey = key;
         videoName = name;
         videoSite = site;
-        showReviews = reviews;
+        reviewAuthor = author;
+        reviewContent = content;
+        reviewUrl = url;
     }
 
-    public String getShowReviews() {
-        return showReviews;
-    }
 
     public String getShowVideoKey() {
         return showVideoKey;
@@ -32,4 +33,15 @@ public class MovieDetails {
         return videoSite;
     }
 
+    public String getReviewAuthor() {
+        return reviewAuthor;
+    }
+
+    public String getReviewContent() {
+        return reviewContent;
+    }
+
+    public String getReviewUrl() {
+        return reviewUrl;
+    }
 }
