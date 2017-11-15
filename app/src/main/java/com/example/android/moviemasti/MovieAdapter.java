@@ -22,10 +22,13 @@ import butterknife.ButterKnife;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
 
-    private ArrayList<MovieData> movieImageData;
+    private ArrayList<MovieData> popularMoviesData;
     private Context mContext;
     private MovieOnClickItemHandler mClickHandler;
 
+   public interface MovieOnClickItemHandler {
+        void onClickItem(MovieData imageData);
+    }
 
     public MovieAdapter(Context context, MovieOnClickItemHandler click) {
 
@@ -52,13 +55,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public void onBindViewHolder(MovieAdapterViewHolder holder, int position) {
-        if (movieImageData != null) {
-            String imgUrl = "https://image.tmdb.org/t/p/w500" + movieImageData.get(position).getMoviePosterPath();
+        if (popularMoviesData != null) {
+            String imgUrl = "https://image.tmdb.org/t/p/w500" + popularMoviesData.get(position).getMoviePosterPath();
             Picasso.with(mContext).load(imgUrl)
                     .placeholder(R.drawable.placeholder3)
                     .error(R.drawable.placeholder3)
                     .into(holder.movieItemImageView);
-            double ratings = movieImageData.get(position).getMovieVotes();
+            double ratings = popularMoviesData.get(position).getMovieVotes();
             String rateText = String.valueOf(ratings) + "/10";
             holder.mMovieRatings.setText(String.valueOf(rateText));
         }
@@ -66,23 +69,20 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public int getItemCount() {
-        if (movieImageData == null) {
+        if (popularMoviesData == null) {
             return 0;
         } else {
-            return movieImageData.size();
+            return popularMoviesData.size();
         }
-
     }
 
-    public void setMovieImageData(ArrayList<MovieData> imageData) {
+    public void setpopularMoviesData(ArrayList<MovieData> imageData) {
         if (imageData != null)
-            movieImageData = new ArrayList<>(imageData);
+            popularMoviesData = imageData;
         notifyDataSetChanged();
     }
 
-    interface MovieOnClickItemHandler {
-        void onClickItem(MovieData imageData);
-    }
+
 
     public class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -99,7 +99,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
         @Override
         public void onClick(View v) {
-            MovieData imageData = movieImageData.get(getAdapterPosition());
+            MovieData imageData = popularMoviesData.get(getAdapterPosition());
             mClickHandler.onClickItem(imageData);
 
         }

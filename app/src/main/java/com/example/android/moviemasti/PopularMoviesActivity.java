@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -50,10 +49,10 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_popular_movies);
+     //   setContentView(R.layout.activity_popular_movies);
         ButterKnife.bind(this);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
+       // Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        //setSupportActionBar(myToolbar);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         movieAdapter = new MovieAdapter(getApplicationContext(), this);
@@ -65,10 +64,7 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
                 loadMovieData(POPULARITY_URL);
             }
         });
-
         loadMovieData(POPULARITY_URL);
-
-
     }
 
     @Override
@@ -152,7 +148,7 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
             mProgressBar.setVisibility(View.INVISIBLE);
             if (imageDataResults != null) {
                 showMovieData();
-                movieAdapter.setMovieImageData(imageDataResults);
+                movieAdapter.setpopularMoviesData(imageDataResults);
             } else {
                 showErrorMessage();
             }
