@@ -18,8 +18,13 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="movie_details_videos">Trailers</string>
     <string name="movie_details_review_item_author_label">Author:</string>
+
     <!--NavigationDrawer-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="navigation_menu_popular_movies">Popular Movies</string>
+    <string name="navigation_menu_favourite_movies">Favourite Movies</string>
+
+    <!--Favourite Fragment-->
+    <string name="favourite_action_error">Some Error occurred</string>
 </resources>

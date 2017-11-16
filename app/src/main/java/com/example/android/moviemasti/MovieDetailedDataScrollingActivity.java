@@ -14,6 +14,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.HapticFeedbackConstants;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,6 +26,7 @@ import com.example.android.moviemasti.datamanipulation.JsonDataParsing;
 import com.example.android.moviemasti.datamanipulation.MovieData;
 import com.example.android.moviemasti.datamanipulation.Networking;
 import com.example.android.moviemasti.pojo.MovieDetails;
+import com.example.android.moviemasti.utils.Favourite;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -32,7 +36,8 @@ import butterknife.ButterKnife;
 
 
 public class MovieDetailedDataScrollingActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<ArrayList<MovieDetails>>,VideoAdapter.OnVideoClickHandler {
+        LoaderManager.LoaderCallbacks<ArrayList<MovieDetails>>, VideoAdapter.OnVideoClickHandler {
+
 
     @SuppressWarnings("FieldCanBeLocal")
     @BindView(R.id.content_text)
@@ -53,6 +58,8 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
     RecyclerView videoRecyclerView;
     @BindView(R.id.recycler_view_review)
     RecyclerView reviewRecyclerView;
+    @BindView(R.id.movie_details_favourite)
+    ImageButton mImageButton;
     private String movieTitle;
     private VideoAdapter videoAdapter;
     private ReviewsAdapter reviewsAdapter;
@@ -64,6 +71,7 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
     private final static String MOVIE_REVIEW_CALL = "reviews";
     private final static String MOVIE_URL = "https://api.themoviedb.org/3/movie/";
     private final static String MOVIE_API = "?api_key=532dfe3fbb248c4ecc6f42703334d18e";
+    private static int TAG_IS_FAVOURITE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +99,7 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
             mMovieRate.setText(movieRate);
             loadingMovieBackDropImage(movieBackdropPath);
             loadingMoviePosterImage(moviePosterPath);
+            setImageButtons(movieId, moviePosterPath, movieTitle,movieRate);
         }
 
         final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
@@ -112,20 +121,20 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
                 }
             }
         });
-        videoAdapter = new VideoAdapter(getApplicationContext(),this);
+        videoAdapter = new VideoAdapter(getApplicationContext(), this);
         reviewsAdapter = new ReviewsAdapter(this);
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getApplicationContext()
-                ,LinearLayoutManager.HORIZONTAL,false);
+                , LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getApplicationContext()
-                ,LinearLayoutManager.VERTICAL,false);
+                , LinearLayoutManager.VERTICAL, false);
         videoRecyclerView.setLayoutManager(linearLayoutManager1);
         videoRecyclerView.setAdapter(videoAdapter);
         reviewRecyclerView.setLayoutManager(linearLayoutManager2);
         reviewRecyclerView.setAdapter(reviewsAdapter);
         String movieVideoUrl = MOVIE_URL + movieId + "/" + MOVIE_VIDEO_CALL + MOVIE_API;
         String movieReviewUrl = MOVIE_URL + movieId + "/" + MOVIE_REVIEW_CALL + MOVIE_API;
-        loadData(movieVideoUrl,MOVIE_VIDEO_LOADER);
-        loadData(movieReviewUrl,MOVIE_REVIEW_LOADER);
+        loadData(movieVideoUrl, MOVIE_VIDEO_LOADER);
+        loadData(movieReviewUrl, MOVIE_REVIEW_LOADER);
     }
 
     public void loadingMovieBackDropImage(String imgUrlPartBackDrop) {
@@ -146,7 +155,7 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
         }
     }
 
-    public void loadData(String url,int LoaderConstant) {
+    public void loadData(String url, int LoaderConstant) {
         Bundle bundle = new Bundle();
         bundle.putString(MOVIE_CALL, url);
         LoaderManager loaderManager = getLoaderManager();
@@ -163,21 +172,21 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
         return new AsyncTaskLoader<ArrayList<MovieDetails>>(this) {
             @Override
             protected void onStartLoading() {
-               if(isStarted())
+                if (isStarted())
                     forceLoad();
             }
 
             @Override
             public ArrayList<MovieDetails> loadInBackground() {
                 String apiUrl = args.getString(MOVIE_CALL);
-                Log.i("MovieDetails",apiUrl);
+                Log.i("MovieDetails", apiUrl);
                 ArrayList<MovieDetails> movieDetailsArrayList = null;
                 try {
 
                     String jsonMovieResult = Networking.getJSONResponseFromUrl(apiUrl);
-                    if(id == MOVIE_VIDEO_LOADER)
+                    if (id == MOVIE_VIDEO_LOADER)
                         movieDetailsArrayList = JsonDataParsing.getVideoData(jsonMovieResult);
-                    else if(id == MOVIE_REVIEW_LOADER)
+                    else if (id == MOVIE_REVIEW_LOADER)
                         movieDetailsArrayList = JsonDataParsing.getReviewData(jsonMovieResult);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -190,9 +199,9 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
     @Override
     public void onLoadFinished(Loader<ArrayList<MovieDetails>> loader, ArrayList<MovieDetails> data) {
         if (data != null && data.size() != 0) {
-            if(loader.getId() == MOVIE_VIDEO_LOADER)
+            if (loader.getId() == MOVIE_VIDEO_LOADER)
                 videoAdapter.setArrayList(data);
-            else if(loader.getId() == MOVIE_REVIEW_LOADER)
+            else if (loader.getId() == MOVIE_REVIEW_LOADER)
                 reviewsAdapter.setArrayListReview(data);
         }
     }
@@ -205,9 +214,9 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
 
     @Override
     public void onVideoClick(String key, Context context) {
-        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:"+key));
-        Intent webIntent = new Intent(Intent.ACTION_VIEW,Uri.parse
-                ("https://www.youtube.com/watch?v="+key));
+        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + key));
+        Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse
+                ("https://www.youtube.com/watch?v=" + key));
         /*try{
             startActivity(appIntent);
         }catch (ActivityNotFoundException e){
@@ -220,5 +229,34 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
 
         // startActivity(webIntent);
 
+    }
+
+    private void setImageButtons(final Long movieId, final String posterPath, final String movieTitle, final String movieRate) {
+        if (movieId == null) {
+            return;
+        }
+        if (Favourite.isMovieFav(MovieDetailedDataScrollingActivity.this, movieId)) {
+            mImageButton.setTag(Favourite.TAG_FAV);
+            mImageButton.setImageResource(R.drawable.ic_favourite_pressed);
+        } else {
+            mImageButton.setTag(Favourite.TAG_NOT_FAV);
+            mImageButton.setImageResource(R.drawable.ic_favourites_not_pressed);
+        }
+        mImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                if ((int) mImageButton.getTag() == Favourite.TAG_FAV) {
+                    Favourite.removeMovieFromFav(MovieDetailedDataScrollingActivity.this, movieId);
+                    mImageButton.setTag(Favourite.TAG_NOT_FAV);
+                    mImageButton.setImageResource(R.drawable.ic_favourites_not_pressed);
+                    Log.i("TAG_NOT_FAV", "movieID");
+                } else {
+                    Favourite.addMovieToFav(MovieDetailedDataScrollingActivity.this, movieId, posterPath, movieTitle,movieRate);
+                    mImageButton.setTag(Favourite.TAG_FAV);
+                    mImageButton.setImageResource(R.drawable.ic_favourite_pressed);
+                }
+            }
+        });
     }
 }
