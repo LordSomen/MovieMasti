@@ -43,6 +43,7 @@ public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.Mov
             "https://api.themoviedb.org/3/movie/top_rated?api_key=532dfe3fbb248c4ecc6f42703334d18e";
     private static final String MOVIE_URL = "url";
     private static final int MOVIE_POPULARITY_LOADER = 2400;
+    public static ArrayList<MovieData> arrayListTopRated;
     @BindView(R.id.popular_movie_data_rv)
     RecyclerView mRecyclerView;
     @BindView(R.id.action_error)
@@ -67,6 +68,12 @@ public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.Mov
         movieAdapter = new MovieAdapter(getActivity().getApplicationContext(), this);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(movieAdapter);
+        mReloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadMovieData(TOP_RATED_URL);
+            }
+        });
         loadMovieData(TOP_RATED_URL);
         return popularMoviesView;
     }
@@ -117,7 +124,6 @@ public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.Mov
                 }
             }
 
-
         };
     }
 
@@ -149,5 +155,7 @@ public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.Mov
         movieIntent.putExtras(mBundle);
         startActivity(movieIntent);
     }
+
+
 }
 

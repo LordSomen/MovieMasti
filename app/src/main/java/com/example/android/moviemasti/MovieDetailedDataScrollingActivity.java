@@ -2,6 +2,7 @@ package com.example.android.moviemasti;
 
 import android.annotation.SuppressLint;
 import android.app.LoaderManager;
+import android.app.LoaderManager.LoaderCallbacks;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.content.Intent;
@@ -37,7 +38,7 @@ import butterknife.ButterKnife;
 
 
 public class MovieDetailedDataScrollingActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<ArrayList<MovieDetails>>, VideoAdapter.OnVideoClickHandler,
+        LoaderCallbacks<ArrayList<MovieDetails>>, VideoAdapter.OnVideoClickHandler,
         ReviewsAdapter.OnReviewItemClickHandler {
 
     @SuppressWarnings("FieldCanBeLocal")
@@ -76,7 +77,6 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
     private final static String MOVIE_REVIEW_CALL = "reviews";
     private final static String MOVIE_URL = "https://api.themoviedb.org/3/movie/";
     private final static String MOVIE_API = "?api_key=532dfe3fbb248c4ecc6f42703334d18e";
-    private static int TAG_IS_FAVOURITE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,16 +98,20 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
             String movieBackdropPath = movieData.getMovieBackdropPath();
             String movieReleaseDate = movieData.getMovieReleaseDate();
             String movieRate = movieData.getMovieVotes() + "/10";
+            double popularity = movieData.getMoviePopularity();
+
             mMovieTitle.setText(movieTitle);
             mContentTextView.setText(movieDescription);
             mMovieReleaseDate.setText(movieReleaseDate);
             mMovieRate.setText(movieRate);
             loadingMovieBackDropImage(movieBackdropPath);
             loadingMoviePosterImage(moviePosterPath);
-            setImageButtons(movieId, moviePosterPath, movieTitle, movieRate);
+            setImageButtons(movieId, moviePosterPath, movieTitle, movieRate,popularity,
+                    movieBackdropPath,movieDescription,movieReleaseDate);
         }
 
-        final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)
+                findViewById(R.id.toolbar_layout);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = false;
             int scrollRange = -1;
@@ -247,7 +251,9 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
         }
     }
 
-    private void setImageButtons(final Long movieId, final String posterPath, final String movieTitle, final String movieRate) {
+    private void setImageButtons(final Long movieId, final String posterPath, final String movieTitle,
+                                 final String movieRate, final double popularity, final String backdropPath ,
+                                 final String description, final String releaseDate) {
         if (movieId == null) {
             return;
         }
@@ -268,7 +274,9 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
                     mImageButton.setImageResource(R.drawable.ic_favourites_not_pressed);
                     Log.i("TAG_NOT_FAV", "movieID");
                 } else {
-                    Favourite.addMovieToFav(MovieDetailedDataScrollingActivity.this, movieId, posterPath, movieTitle, movieRate);
+                    Favourite.addMovieToFav(MovieDetailedDataScrollingActivity.this,
+                            movieId, posterPath, movieTitle, movieRate,popularity,backdropPath,
+                            description,releaseDate);
                     mImageButton.setTag(Favourite.TAG_FAV);
                     mImageButton.setImageResource(R.drawable.ic_favourite_pressed);
                 }

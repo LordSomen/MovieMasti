@@ -24,7 +24,10 @@ public class MovieDataBaseContract  {
         public static final String COLUMN_MOVIE_TITLE = "movie_title";
         public static final String COLUMN_MOVIE_POSTER_PATH = "movie_poster_path";
         public static final String COLUMN_MOVIE_RATING = "movie_rating";
-
+        public static final String COLUMN_MOVIE_POPULARITY = "movie_popularity";
+        public static final String COLUMN_MOVIE_BACKDROP_PATH = "movie_backdrop_path";
+        public static final String COLUMN_MOVIE_DESCRIPTION = "movie_description";
+        public static final String COLUMN_MOVIE_RELEASE_DATE = "movie_release_date";
 
     }
 }

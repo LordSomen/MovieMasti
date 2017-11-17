@@ -3,6 +3,7 @@ package com.example.android.moviemasti;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -50,10 +51,44 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+/*
+      @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater in = getMenuInflater();
+        in.inflate(R.menu.menu_sorting_movies, menu);
+        return true;
+    }
+
+  @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        int menuItemId = menuItem.getItemId();
+        switch (menuItemId) {
+            case R.id.menu_sorting_popularity:
+                if (MainArrayList != null) {
+                    MainArrayList = SortingMovieData.sortAccordingToPopularity(MainArrayList);
+                    PopularMoviesFragment fragment = new PopularMoviesFragment();
+                    fragment.sortDataControl(MainArrayList);
+                } else {
+                    Snackbar.make(frameLayout, "No data to sort", Snackbar.LENGTH_LONG).show();
+                }
+                return true;
+            case R.id.menu_sorting_rating:
+                if (MainArrayList != null) {
+                    MainArrayList = SortingMovieData.sortAccordingToRating(MainArrayList);
+                    TopRatedMoviesFragment fragment = new TopRatedMoviesFragment();
+                    fragment.sortDataControl(MainArrayList);
+                } else {
+                    Snackbar.make(frameLayout, "No data to sort", Snackbar.LENGTH_LONG).show();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(menuItem);
+        }
+    }*/
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         setFragment(id);

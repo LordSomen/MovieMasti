@@ -24,9 +24,15 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
 
     private Context mContext;
     private Cursor favouriteCursor;
-    public FavouriteAdapter(Context context){
+    private OnClickFavouriteItemHandler clickFavouriteItemHandler;
+    public FavouriteAdapter(Context context,OnClickFavouriteItemHandler onClickFavouriteItemHandler){
         mContext = context;
+        clickFavouriteItemHandler = onClickFavouriteItemHandler;
 
+    }
+
+    public interface OnClickFavouriteItemHandler{
+        void onFavoutiteItemClick(Cursor cursor);
     }
     @Override
     public FavouriteHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -70,7 +76,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
         notifyDataSetChanged();
     }
 
-    public class FavouriteHolder extends RecyclerView.ViewHolder{
+    public class FavouriteHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @BindView(R.id.image_items)
         ImageView mImageView;
         @BindView(R.id.movie_rating)
@@ -78,6 +84,13 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
         public FavouriteHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            favouriteCursor.moveToPosition(getAdapterPosition());
+            clickFavouriteItemHandler.onFavoutiteItemClick(favouriteCursor);
         }
     }
 }

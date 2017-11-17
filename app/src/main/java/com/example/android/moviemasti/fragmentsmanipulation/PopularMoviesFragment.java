@@ -43,7 +43,7 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
             "https://api.themoviedb.org/3/movie/popular?api_key=532dfe3fbb248c4ecc6f42703334d18e";
     private static final String MOVIE_URL = "url";
     private static final int MOVIE_POPULARITY_LOADER = 2400;
-    public static ArrayList<MovieData> arrayList;
+    public static ArrayList<MovieData> arrayListPopular;
     @BindView(R.id.popular_movie_data_rv)
     RecyclerView mRecyclerView;
     @BindView(R.id.action_error)
@@ -68,6 +68,12 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
         movieAdapter = new MovieAdapter(getActivity().getApplicationContext(), this);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(movieAdapter);
+        mReloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadMovieData(POPULARITY_URL);
+            }
+        });
         loadMovieData(POPULARITY_URL);
         return popularMoviesView;
     }
@@ -129,7 +135,6 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
             mErrorLayout.setVisibility(View.INVISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
             movieAdapter.setpopularMoviesData(data);
-            arrayList = data;
         } else {
             mErrorLayout.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.INVISIBLE);
@@ -142,9 +147,6 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
 
     }
 
-
-
-
     @Override
     public void onClickItem(MovieData imageData) {
         Intent movieIntent = new Intent(getActivity().getApplicationContext(), MovieDetailedDataScrollingActivity.class);
@@ -153,4 +155,6 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
         movieIntent.putExtras(mBundle);
         startActivity(movieIntent);
     }
+
+
 }

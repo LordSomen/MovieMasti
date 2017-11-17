@@ -32,7 +32,9 @@ public class Favourite {
         return isMovieFav;
     }
 
-    public static void addMovieToFav(Context context, Long movieId, String posterPath, String name,String rating) {
+    public static void addMovieToFav(Context context, Long movieId, String posterPath, String name,
+                                     String rating,double popularity,String backdropPath,
+                                     String description,String releaseDate) {
         if (movieId == null) return;
 
         if (!isMovieFav(context, movieId)) {
@@ -41,6 +43,10 @@ public class Favourite {
             contentValues.put(MovieDataBaseContract.MovieEntry.COLUMN_MOVIE_POSTER_PATH, posterPath);
             contentValues.put(MovieDataBaseContract.MovieEntry.COLUMN_MOVIE_TITLE, name);
             contentValues.put(MovieDataBaseContract.MovieEntry.COLUMN_MOVIE_RATING,rating);
+            contentValues.put(MovieDataBaseContract.MovieEntry.COLUMN_MOVIE_DESCRIPTION,description);
+            contentValues.put(MovieDataBaseContract.MovieEntry.COLUMN_MOVIE_POPULARITY,popularity);
+            contentValues.put(MovieDataBaseContract.MovieEntry.COLUMN_MOVIE_BACKDROP_PATH,backdropPath);
+            contentValues.put(MovieDataBaseContract.MovieEntry.COLUMN_MOVIE_RELEASE_DATE,releaseDate);
 
            context.getContentResolver().insert(MovieDataBaseContract.MovieEntry.CONTENT_URI,contentValues);
         }
