@@ -109,11 +109,10 @@ public class FavouriteMoviesContentProvider extends ContentProvider {
         int match = sUriMatcher.match(uri);
         int tasksDeleted;
         switch (match) {
-            case FAV_MOVIES_WITH_ID:
+            case FAV_MOVIES:
 
-                String id = uri.getPathSegments().get(1);
                 tasksDeleted = db.delete(MovieDataBaseContract.MovieEntry.TABLE_NAME,
-                        "_id=?", new String[]{id});
+                        selection, null);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);

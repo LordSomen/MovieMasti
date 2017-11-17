@@ -70,6 +70,7 @@ public class FavouriteMoviesFragment extends Fragment implements LoaderManager.L
             protected void onStartLoading() {
                 mProgressbar.setVisibility(View.VISIBLE);
                 mRecyclerView.setVisibility(View.VISIBLE);
+                mErrorTextView.setVisibility(View.INVISIBLE);
                 if(mCursor != null)
                     deliverResult(mCursor);
                 else
