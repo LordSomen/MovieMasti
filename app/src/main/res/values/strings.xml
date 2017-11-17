@@ -29,4 +29,7 @@
 
     <!--Favourite Fragment-->
     <string name="favourite_action_error">Some Error occurred</string>
+    <string name="reviews">Reviews</string>
+    <string name="movie_details_not_available">Not Available</string>
+    <string name="trailers">Trailers</string>
 </resources>

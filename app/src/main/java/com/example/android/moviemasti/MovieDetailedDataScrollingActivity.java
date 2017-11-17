@@ -1,5 +1,6 @@
 package com.example.android.moviemasti;
 
+import android.annotation.SuppressLint;
 import android.app.LoaderManager;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
@@ -36,8 +37,8 @@ import butterknife.ButterKnife;
 
 
 public class MovieDetailedDataScrollingActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<ArrayList<MovieDetails>>, VideoAdapter.OnVideoClickHandler {
-
+        LoaderManager.LoaderCallbacks<ArrayList<MovieDetails>>, VideoAdapter.OnVideoClickHandler,
+        ReviewsAdapter.OnReviewItemClickHandler {
 
     @SuppressWarnings("FieldCanBeLocal")
     @BindView(R.id.content_text)
@@ -60,6 +61,10 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
     RecyclerView reviewRecyclerView;
     @BindView(R.id.movie_details_favourite)
     ImageButton mImageButton;
+    @BindView(R.id.error_trailers)
+    TextView mTrailerErrorTextView;
+    @BindView(R.id.error_reviews)
+    TextView mReviewErrorTextView;
     private String movieTitle;
     private VideoAdapter videoAdapter;
     private ReviewsAdapter reviewsAdapter;
@@ -99,7 +104,7 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
             mMovieRate.setText(movieRate);
             loadingMovieBackDropImage(movieBackdropPath);
             loadingMoviePosterImage(moviePosterPath);
-            setImageButtons(movieId, moviePosterPath, movieTitle,movieRate);
+            setImageButtons(movieId, moviePosterPath, movieTitle, movieRate);
         }
 
         final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
@@ -122,7 +127,7 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
             }
         });
         videoAdapter = new VideoAdapter(getApplicationContext(), this);
-        reviewsAdapter = new ReviewsAdapter(this);
+        reviewsAdapter = new ReviewsAdapter(getApplicationContext(), this);
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getApplicationContext()
                 , LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getApplicationContext()
@@ -167,11 +172,21 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
             loaderManager.restartLoader(LoaderConstant, bundle, this);
     }
 
+    @SuppressLint("StaticFieldLeak")
     @Override
     public Loader<ArrayList<MovieDetails>> onCreateLoader(final int id, final Bundle args) {
         return new AsyncTaskLoader<ArrayList<MovieDetails>>(this) {
             @Override
             protected void onStartLoading() {
+                switch (id) {
+                    case MOVIE_VIDEO_LOADER:
+                        mTrailerErrorTextView.setVisibility(View.GONE);
+                        videoRecyclerView.setVisibility(View.VISIBLE);
+                        break;
+                    case MOVIE_REVIEW_LOADER:
+                        mReviewErrorTextView.setVisibility(View.GONE);
+                        reviewRecyclerView.setVisibility(View.VISIBLE);
+                }
                 if (isStarted())
                     forceLoad();
             }
@@ -199,10 +214,21 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
     @Override
     public void onLoadFinished(Loader<ArrayList<MovieDetails>> loader, ArrayList<MovieDetails> data) {
         if (data != null && data.size() != 0) {
-            if (loader.getId() == MOVIE_VIDEO_LOADER)
+            if (loader.getId() == MOVIE_VIDEO_LOADER) {
                 videoAdapter.setArrayList(data);
-            else if (loader.getId() == MOVIE_REVIEW_LOADER)
+                mTrailerErrorTextView.setVisibility(View.GONE);
+            } else if (loader.getId() == MOVIE_REVIEW_LOADER) {
                 reviewsAdapter.setArrayListReview(data);
+                mReviewErrorTextView.setVisibility(View.GONE);
+            }
+        } else {
+            if (loader.getId() == MOVIE_VIDEO_LOADER) {
+                mTrailerErrorTextView.setVisibility(View.VISIBLE);
+                videoRecyclerView.setVisibility(View.GONE);
+            } else if (loader.getId() == MOVIE_REVIEW_LOADER) {
+                mReviewErrorTextView.setVisibility(View.VISIBLE);
+                reviewRecyclerView.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -214,21 +240,11 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
 
     @Override
     public void onVideoClick(String key, Context context) {
-        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + key));
         Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse
                 ("https://www.youtube.com/watch?v=" + key));
-        /*try{
-            startActivity(appIntent);
-        }catch (ActivityNotFoundException e){
-            e.printStackTrace();
-           startActivity(webIntent);
-        }*/
         if (webIntent.resolveActivity(getPackageManager()) != null) {
             startActivity(webIntent);
         }
-
-        // startActivity(webIntent);
-
     }
 
     private void setImageButtons(final Long movieId, final String posterPath, final String movieTitle, final String movieRate) {
@@ -252,11 +268,18 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
                     mImageButton.setImageResource(R.drawable.ic_favourites_not_pressed);
                     Log.i("TAG_NOT_FAV", "movieID");
                 } else {
-                    Favourite.addMovieToFav(MovieDetailedDataScrollingActivity.this, movieId, posterPath, movieTitle,movieRate);
+                    Favourite.addMovieToFav(MovieDetailedDataScrollingActivity.this, movieId, posterPath, movieTitle, movieRate);
                     mImageButton.setTag(Favourite.TAG_FAV);
                     mImageButton.setImageResource(R.drawable.ic_favourite_pressed);
                 }
             }
         });
+    }
+
+    @Override
+    public void onClickReviewItem(String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        if (intent.resolveActivity(getPackageManager()) != null)
+            startActivity(intent);
     }
 }

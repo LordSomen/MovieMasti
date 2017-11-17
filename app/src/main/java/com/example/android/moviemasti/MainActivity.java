@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private FrameLayout frameLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        frameLayout = (FrameLayout)findViewById(R.id.activity_main);
+        frameLayout = (FrameLayout) findViewById(R.id.activity_main);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -61,22 +62,22 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public void setFragment(int id){
+    public void setFragment(int id) {
         Fragment fragment = null;
-        switch (id){
-            case R.id.nav_popular_movies :
+        switch (id) {
+            case R.id.nav_popular_movies:
                 fragment = new PopularMoviesFragment();
                 break;
-            case R.id.nav_favourite_movies :
+            case R.id.nav_favourite_movies:
                 fragment = new FavouriteMoviesFragment();
                 break;
-            case R.id.nav_top_rated_movies :
+            case R.id.nav_top_rated_movies:
                 fragment = new TopRatedMoviesFragment();
                 break;
         }
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
-                        .replace(R.id.main_content,fragment)
-                        .commit();
+                .replace(R.id.main_content, fragment)
+                .commit();
     }
 }

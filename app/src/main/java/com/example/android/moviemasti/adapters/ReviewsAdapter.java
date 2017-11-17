@@ -23,10 +23,12 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewHo
 
     private Context mContext;
     private ArrayList<MovieDetails> reviewArrayList;
-    public ReviewsAdapter(Context context){
-        mContext = context;
-    }
     public OnReviewItemClickHandler reviewItemClickHandler;
+
+    public ReviewsAdapter(Context context,OnReviewItemClickHandler clickHandler){
+        mContext = context;
+        reviewItemClickHandler = clickHandler;
+    }
     public interface OnReviewItemClickHandler{
         void onClickReviewItem(String url);
     }
