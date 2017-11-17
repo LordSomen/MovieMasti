@@ -53,7 +53,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
                     .placeholder(R.drawable.placeholder3)
                     .error(R.drawable.placeholder3)
                     .into(holder.mImageView);
-            holder.ratingTextView.setText(String.valueOf(movieRating));
+            holder.ratingTextView.setText(String.valueOf(movieRating)+"/10");
         }
     }
 

@@ -25,6 +25,7 @@
     <string name="navigation_menu_popular_movies">Popular Movies</string>
     <string name="navigation_menu_favourite_movies">Favourite Movies</string>
     <string name="navigation_menu_top_rated_movies">Top Rated Movies</string>
+    <string name="nav_drawer_name">MovieMasti</string>
 
     <!--Favourite Fragment-->
     <string name="favourite_action_error">Some Error occurred</string>

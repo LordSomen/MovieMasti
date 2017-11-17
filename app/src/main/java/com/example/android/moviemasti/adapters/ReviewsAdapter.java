@@ -26,6 +26,10 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewHo
     public ReviewsAdapter(Context context){
         mContext = context;
     }
+    public OnReviewItemClickHandler reviewItemClickHandler;
+    public interface OnReviewItemClickHandler{
+        void onClickReviewItem(String url);
+    }
 
     @Override
     public ReviewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -59,7 +63,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewHo
         }
     }
 
-    public class ReviewHolder extends RecyclerView.ViewHolder{
+    public class ReviewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         @BindView(R.id.author_name)
         public TextView mAuthorTextView;
@@ -69,6 +73,13 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewHo
         public ReviewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            MovieDetails movieDetails = reviewArrayList.get(getAdapterPosition());
+            reviewItemClickHandler.onClickReviewItem(movieDetails.getReviewUrl());
         }
     }
 }
