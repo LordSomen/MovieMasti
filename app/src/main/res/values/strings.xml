@@ -24,6 +24,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="navigation_menu_popular_movies">Popular Movies</string>
     <string name="navigation_menu_favourite_movies">Favourite Movies</string>
+    <string name="navigation_menu_top_rated_movies">Top Rated Movies</string>
 
     <!--Favourite Fragment-->
     <string name="favourite_action_error">Some Error occurred</string>

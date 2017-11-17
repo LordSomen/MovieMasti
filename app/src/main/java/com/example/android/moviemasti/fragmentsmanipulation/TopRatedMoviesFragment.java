@@ -33,14 +33,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by soumyajit on 14/11/17.
+ * Created by soumyajit on 17/11/17.
  */
 
-public class PopularMoviesFragment extends Fragment implements MovieAdapter.MovieOnClickItemHandler,
+public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.MovieOnClickItemHandler,
         LoaderManager.LoaderCallbacks<ArrayList<MovieData>> {
 
-    private final String POPULARITY_URL =
-            "https://api.themoviedb.org/3/movie/popular?api_key=532dfe3fbb248c4ecc6f42703334d18e";
+    private final String TOP_RATED_URL =
+            "https://api.themoviedb.org/3/movie/top_rated?api_key=532dfe3fbb248c4ecc6f42703334d18e";
     private static final String MOVIE_URL = "url";
     private static final int MOVIE_POPULARITY_LOADER = 2400;
     @BindView(R.id.popular_movie_data_rv)
@@ -67,7 +67,7 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
         movieAdapter = new MovieAdapter(getActivity().getApplicationContext(), this);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(movieAdapter);
-        loadMovieData(POPULARITY_URL);
+        loadMovieData(TOP_RATED_URL);
         return popularMoviesView;
     }
 
@@ -104,13 +104,13 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
             @Override
             public ArrayList<MovieData> loadInBackground() {
                 try {
-                        ArrayList<MovieData> movieDataArrayList=null;
-                        String apiUrl = args.getString(MOVIE_URL);
-                        String jsonMovieResult = Networking.getJSONResponseFromUrl(apiUrl);
-                        if (jsonMovieResult != null) {
-                            movieDataArrayList = JsonDataParsing.getDataForPopularity(jsonMovieResult);
-                        }
-                        return movieDataArrayList;
+                    ArrayList<MovieData> movieDataArrayList=null;
+                    String apiUrl = args.getString(MOVIE_URL);
+                    String jsonMovieResult = Networking.getJSONResponseFromUrl(apiUrl);
+                    if (jsonMovieResult != null) {
+                        movieDataArrayList = JsonDataParsing.getDataForPopularity(jsonMovieResult);
+                    }
+                    return movieDataArrayList;
                 } catch (JSONException e) {
                     e.printStackTrace();
                     return null;
@@ -150,3 +150,4 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
         startActivity(movieIntent);
     }
 }
+

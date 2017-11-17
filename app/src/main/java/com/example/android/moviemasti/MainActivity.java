@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.android.moviemasti.fragmentsmanipulation.FavouriteMoviesFragment;
 import com.example.android.moviemasti.fragmentsmanipulation.PopularMoviesFragment;
+import com.example.android.moviemasti.fragmentsmanipulation.TopRatedMoviesFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -89,6 +90,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_favourite_movies :
                 fragment = new FavouriteMoviesFragment();
+                break;
+            case R.id.nav_top_rated_movies :
+                fragment = new TopRatedMoviesFragment();
                 break;
             case R.id.nav_share :
                 Toast.makeText(this, "It is for sharing data", Toast.LENGTH_SHORT).show();
