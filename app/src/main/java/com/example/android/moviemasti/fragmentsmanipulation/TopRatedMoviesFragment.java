@@ -8,13 +8,18 @@ import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.util.ArraySet;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -24,6 +29,7 @@ import com.example.android.moviemasti.R;
 import com.example.android.moviemasti.datamanipulation.JsonDataParsing;
 import com.example.android.moviemasti.datamanipulation.MovieData;
 import com.example.android.moviemasti.datamanipulation.Networking;
+import com.example.android.moviemasti.menusmanipulation.SortingMovieData;
 
 import org.json.JSONException;
 
@@ -43,7 +49,7 @@ public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.Mov
             "https://api.themoviedb.org/3/movie/top_rated?api_key=532dfe3fbb248c4ecc6f42703334d18e";
     private static final String MOVIE_URL = "url";
     private static final int MOVIE_POPULARITY_LOADER = 2400;
-    public static ArrayList<MovieData> arrayListTopRated;
+    public static ArrayList<MovieData> arrayTopRatedList;
     @BindView(R.id.popular_movie_data_rv)
     RecyclerView mRecyclerView;
     @BindView(R.id.action_error)
@@ -52,10 +58,14 @@ public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.Mov
     ProgressBar mProgressBar;
     @BindView(R.id.reload_button)
     Button mReloadButton;
+    @BindView(R.id.main_framelayout)
+    FrameLayout frameLayout;
     private MovieAdapter movieAdapter;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -111,7 +121,7 @@ public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.Mov
             @Override
             public ArrayList<MovieData> loadInBackground() {
                 try {
-                    ArrayList<MovieData> movieDataArrayList=null;
+                    ArrayList<MovieData> movieDataArrayList = null;
                     String apiUrl = args.getString(MOVIE_URL);
                     String jsonMovieResult = Networking.getJSONResponseFromUrl(apiUrl);
                     if (jsonMovieResult != null) {
@@ -134,6 +144,7 @@ public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.Mov
             mErrorLayout.setVisibility(View.INVISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
             movieAdapter.setpopularMoviesData(data);
+            arrayTopRatedList = data;
         } else {
             mErrorLayout.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.INVISIBLE);
@@ -154,6 +165,37 @@ public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.Mov
         mBundle.putParcelable("movieIntentData", imageData);
         movieIntent.putExtras(mBundle);
         startActivity(movieIntent);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_sorting_movies, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        int menuItemId = menuItem.getItemId();
+        switch (menuItemId) {
+            case R.id.menu_sorting_popularity:
+                if (arrayTopRatedList != null) {
+                    arrayTopRatedList = SortingMovieData.sortAccordingToPopularity(arrayTopRatedList);
+                    movieAdapter.setpopularMoviesData(arrayTopRatedList);
+                } else {
+                    Snackbar.make(frameLayout, "No data to sort", Snackbar.LENGTH_LONG).show();
+                }
+                return true;
+            case R.id.menu_sorting_rating:
+                if (arrayTopRatedList != null) {
+                    arrayTopRatedList = SortingMovieData.sortAccordingToRating(arrayTopRatedList);
+                    movieAdapter.setpopularMoviesData(arrayTopRatedList);
+                } else {
+                    Snackbar.make(frameLayout, "No data to sort", Snackbar.LENGTH_LONG).show();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(menuItem);
+        }
     }
 
 

@@ -11,7 +11,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 
 import com.example.android.moviemasti.fragmentsmanipulation.FavouriteMoviesFragment;
 import com.example.android.moviemasti.fragmentsmanipulation.PopularMoviesFragment;
@@ -20,7 +19,6 @@ import com.example.android.moviemasti.fragmentsmanipulation.TopRatedMoviesFragme
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private FrameLayout frameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +27,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        frameLayout = (FrameLayout) findViewById(R.id.activity_main);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -51,40 +48,8 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-/*
-      @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater in = getMenuInflater();
-        in.inflate(R.menu.menu_sorting_movies, menu);
-        return true;
-    }
 
-  @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem) {
-        int menuItemId = menuItem.getItemId();
-        switch (menuItemId) {
-            case R.id.menu_sorting_popularity:
-                if (MainArrayList != null) {
-                    MainArrayList = SortingMovieData.sortAccordingToPopularity(MainArrayList);
-                    PopularMoviesFragment fragment = new PopularMoviesFragment();
-                    fragment.sortDataControl(MainArrayList);
-                } else {
-                    Snackbar.make(frameLayout, "No data to sort", Snackbar.LENGTH_LONG).show();
-                }
-                return true;
-            case R.id.menu_sorting_rating:
-                if (MainArrayList != null) {
-                    MainArrayList = SortingMovieData.sortAccordingToRating(MainArrayList);
-                    TopRatedMoviesFragment fragment = new TopRatedMoviesFragment();
-                    fragment.sortDataControl(MainArrayList);
-                } else {
-                    Snackbar.make(frameLayout, "No data to sort", Snackbar.LENGTH_LONG).show();
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(menuItem);
-        }
-    }*/
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
