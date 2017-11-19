@@ -23,13 +23,13 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.example.android.moviemasti.MovieAdapter;
-import com.example.android.moviemasti.MovieDetailedDataScrollingActivity;
 import com.example.android.moviemasti.R;
+import com.example.android.moviemasti.activities.MovieDetailedDataScrollingActivity;
+import com.example.android.moviemasti.adapters.MovieAdapter;
 import com.example.android.moviemasti.datamanipulation.JsonDataParsing;
-import com.example.android.moviemasti.datamanipulation.MovieData;
 import com.example.android.moviemasti.datamanipulation.Networking;
 import com.example.android.moviemasti.menusmanipulation.SortingMovieData;
+import com.example.android.moviemasti.pojo.MovieData;
 
 import org.json.JSONException;
 
@@ -45,11 +45,11 @@ import butterknife.ButterKnife;
 public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.MovieOnClickItemHandler,
         LoaderManager.LoaderCallbacks<ArrayList<MovieData>> {
 
-    private final String TOP_RATED_URL =
-            "https://api.themoviedb.org/3/movie/top_rated?api_key=532dfe3fbb248c4ecc6f42703334d18e";
     private static final String MOVIE_URL = "url";
     private static final int MOVIE_POPULARITY_LOADER = 2400;
     public static ArrayList<MovieData> arrayTopRatedList;
+    private final String TOP_RATED_URL =
+            "https://api.themoviedb.org/3/movie/top_rated?api_key=532dfe3fbb248c4ecc6f42703334d18e";
     @BindView(R.id.popular_movie_data_rv)
     RecyclerView mRecyclerView;
     @BindView(R.id.action_error)

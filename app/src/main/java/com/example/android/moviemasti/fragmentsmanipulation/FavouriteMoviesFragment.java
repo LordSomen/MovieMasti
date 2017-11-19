@@ -23,11 +23,11 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.android.moviemasti.MovieDetailedDataScrollingActivity;
 import com.example.android.moviemasti.R;
+import com.example.android.moviemasti.activities.MovieDetailedDataScrollingActivity;
 import com.example.android.moviemasti.adapters.FavouriteAdapter;
 import com.example.android.moviemasti.database.MovieDataBaseContract;
-import com.example.android.moviemasti.datamanipulation.MovieData;
+import com.example.android.moviemasti.pojo.MovieData;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,10 +39,11 @@ import butterknife.ButterKnife;
 public class FavouriteMoviesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>
         , FavouriteAdapter.OnClickFavouriteItemHandler {
 
+    public static final int FAV_MOVIE_LOADER = 1216;
     private static final String MOVIE_TAG = "sorting_tag";
     private static final String TAG_RATE = "rate";
     private static final String TAG_POPULARITY = "popularity";
-    private Cursor dataCursor = null;
+    private final static String FAVOURITE_VALUE_KEY = "movieIntentData";
     @BindView(R.id.fav_framelayout)
     FrameLayout frameLayout;
     @BindView(R.id.favourite_movie_data_rv)
@@ -51,9 +52,8 @@ public class FavouriteMoviesFragment extends Fragment implements LoaderManager.L
     TextView mErrorTextView;
     @BindView(R.id.favourite_progress_bar)
     ProgressBar mProgressbar;
-    public static final int FAV_MOVIE_LOADER = 1216;
+    private Cursor dataCursor = null;
     private FavouriteAdapter favouriteAdapter;
-    private final static String FAVOURITE_VALUE_KEY = "movieIntentData";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -116,14 +116,14 @@ public class FavouriteMoviesFragment extends Fragment implements LoaderManager.L
             public Cursor loadInBackground() {
                 try {
                     String sortingOrder = MovieDataBaseContract.MovieEntry.COLUMN_MOVIE_RATING + " DESC ";
-                    if (args!=null && args.getString(MOVIE_TAG).equals(TAG_POPULARITY)) {
+                    if (args != null && args.getString(MOVIE_TAG).equals(TAG_POPULARITY)) {
                         sortingOrder = MovieDataBaseContract.MovieEntry.COLUMN_MOVIE_POPULARITY + " DESC ";
                     }
                     return getContext().getContentResolver().query(MovieDataBaseContract.MovieEntry.CONTENT_URI,
                             null, null, null,
                             sortingOrder);
                 } catch (Exception e) {
-                    Log.i("favourite", "Not succesfully loaderd the data", e);
+                    Log.i("favourite", "Not successfully loaded the data", e);
                     e.printStackTrace();
                     return null;
                 }
@@ -144,6 +144,7 @@ public class FavouriteMoviesFragment extends Fragment implements LoaderManager.L
             if (loader.getId() == FAV_MOVIE_LOADER)
                 favouriteAdapter.swapCursor(data);
             dataCursor = data;
+            Log.i("Favourite", "Count " + dataCursor.getCount());
 
         } else {
             mRecyclerView.setVisibility(View.INVISIBLE);
@@ -204,17 +205,17 @@ public class FavouriteMoviesFragment extends Fragment implements LoaderManager.L
         int menuItemId = menuItem.getItemId();
         switch (menuItemId) {
             case R.id.menu_sorting_popularity:
-                if (dataCursor != null) {
+                if (dataCursor != null && dataCursor.getCount() > 1) {
                     loadMovieData(TAG_POPULARITY);
                 } else {
-                    Snackbar.make(frameLayout, "No data to sort", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(frameLayout, "Sorting is not possible", Snackbar.LENGTH_LONG).show();
                 }
                 return true;
             case R.id.menu_sorting_rating:
-                if (dataCursor != null) {
+                if (dataCursor != null && dataCursor.getCount() > 1) {
                     loadMovieData(TAG_RATE);
                 } else {
-                    Snackbar.make(frameLayout, "No data to sort", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(frameLayout, "Sorting is not possible", Snackbar.LENGTH_LONG).show();
                 }
                 return true;
             default:

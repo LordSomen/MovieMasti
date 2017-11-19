@@ -1,4 +1,4 @@
-package com.example.android.moviemasti;
+package com.example.android.moviemasti.activities;
 
 import android.annotation.SuppressLint;
 import android.app.LoaderManager;
@@ -22,11 +22,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.android.moviemasti.R;
 import com.example.android.moviemasti.adapters.ReviewsAdapter;
 import com.example.android.moviemasti.adapters.VideoAdapter;
 import com.example.android.moviemasti.datamanipulation.JsonDataParsing;
-import com.example.android.moviemasti.datamanipulation.MovieData;
 import com.example.android.moviemasti.datamanipulation.Networking;
+import com.example.android.moviemasti.pojo.MovieData;
 import com.example.android.moviemasti.pojo.MovieDetails;
 import com.example.android.moviemasti.utils.Favourite;
 import com.squareup.picasso.Picasso;
@@ -41,6 +42,13 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
         LoaderCallbacks<ArrayList<MovieDetails>>, VideoAdapter.OnVideoClickHandler,
         ReviewsAdapter.OnReviewItemClickHandler {
 
+    private final static int MOVIE_VIDEO_LOADER = 2416;
+    private final static int MOVIE_REVIEW_LOADER = 1600;
+    private final static String MOVIE_CALL = "movies";
+    private final static String MOVIE_VIDEO_CALL = "videos";
+    private final static String MOVIE_REVIEW_CALL = "reviews";
+    private final static String MOVIE_URL = "https://api.themoviedb.org/3/movie/";
+    private final static String MOVIE_API = "?api_key=532dfe3fbb248c4ecc6f42703334d18e";
     @SuppressWarnings("FieldCanBeLocal")
     @BindView(R.id.content_text)
     TextView mContentTextView;
@@ -69,14 +77,6 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
     private String movieTitle;
     private VideoAdapter videoAdapter;
     private ReviewsAdapter reviewsAdapter;
-    private final static int MOVIE_VIDEO_LOADER = 2416;
-    private final static int MOVIE_REVIEW_LOADER = 1600;
-
-    private final static String MOVIE_CALL = "movies";
-    private final static String MOVIE_VIDEO_CALL = "videos";
-    private final static String MOVIE_REVIEW_CALL = "reviews";
-    private final static String MOVIE_URL = "https://api.themoviedb.org/3/movie/";
-    private final static String MOVIE_API = "?api_key=532dfe3fbb248c4ecc6f42703334d18e";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,8 +106,8 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
             mMovieRate.setText(movieRate);
             loadingMovieBackDropImage(movieBackdropPath);
             loadingMoviePosterImage(moviePosterPath);
-            setImageButtons(movieId, moviePosterPath, movieTitle, movieRate,popularity,
-                    movieBackdropPath,movieDescription,movieReleaseDate);
+            setImageButtons(movieId, moviePosterPath, movieTitle, movieRate, popularity,
+                    movieBackdropPath, movieDescription, movieReleaseDate);
         }
 
         final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)
@@ -252,7 +252,7 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
     }
 
     private void setImageButtons(final Long movieId, final String posterPath, final String movieTitle,
-                                 final String movieRate, final double popularity, final String backdropPath ,
+                                 final String movieRate, final double popularity, final String backdropPath,
                                  final String description, final String releaseDate) {
         if (movieId == null) {
             return;
@@ -275,8 +275,8 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
                     Log.i("TAG_NOT_FAV", "movieID");
                 } else {
                     Favourite.addMovieToFav(MovieDetailedDataScrollingActivity.this,
-                            movieId, posterPath, movieTitle, movieRate,popularity,backdropPath,
-                            description,releaseDate);
+                            movieId, posterPath, movieTitle, movieRate, popularity, backdropPath,
+                            description, releaseDate);
                     mImageButton.setTag(Favourite.TAG_FAV);
                     mImageButton.setImageResource(R.drawable.ic_favourite_pressed);
                 }

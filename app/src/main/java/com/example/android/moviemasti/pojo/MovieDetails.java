@@ -11,7 +11,8 @@ public class MovieDetails {
     String reviewAuthor;
     String reviewContent;
     String reviewUrl;
-    public MovieDetails(String key,String name , String site ,String author,String content , String url){
+
+    public MovieDetails(String key, String name, String site, String author, String content, String url) {
         showVideoKey = key;
         videoName = name;
         videoSite = site;

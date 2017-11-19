@@ -27,13 +27,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoHolder>
     private ArrayList<MovieDetails> videoDetailsArrayList;
     private OnVideoClickHandler videoClickHandler;
 
-    public VideoAdapter(Context context,OnVideoClickHandler click) {
+    public VideoAdapter(Context context, OnVideoClickHandler click) {
         mContext = context;
         videoClickHandler = click;
-    }
-
-    public interface OnVideoClickHandler {
-         void onVideoClick(String key, Context context);
     }
 
     @Override
@@ -71,6 +67,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoHolder>
         }
     }
 
+    public interface OnVideoClickHandler {
+        void onVideoClick(String key, Context context);
+    }
 
     public class VideoHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

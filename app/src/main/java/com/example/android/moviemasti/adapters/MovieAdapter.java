@@ -1,4 +1,4 @@
-package com.example.android.moviemasti;
+package com.example.android.moviemasti.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.android.moviemasti.datamanipulation.MovieData;
+import com.example.android.moviemasti.R;
+import com.example.android.moviemasti.pojo.MovieData;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -25,10 +26,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     private ArrayList<MovieData> popularMoviesData;
     private Context mContext;
     private MovieOnClickItemHandler mClickHandler;
-
-   public interface MovieOnClickItemHandler {
-        void onClickItem(MovieData imageData);
-    }
 
     public MovieAdapter(Context context, MovieOnClickItemHandler click) {
 
@@ -82,7 +79,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         notifyDataSetChanged();
     }
 
-
+    public interface MovieOnClickItemHandler {
+        void onClickItem(MovieData imageData);
+    }
 
     public class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

@@ -1,4 +1,4 @@
-package com.example.android.moviemasti;
+package com.example.android.moviemasti.activities;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.example.android.moviemasti.R;
 import com.example.android.moviemasti.fragmentsmanipulation.FavouriteMoviesFragment;
 import com.example.android.moviemasti.fragmentsmanipulation.PopularMoviesFragment;
 import com.example.android.moviemasti.fragmentsmanipulation.TopRatedMoviesFragment;
@@ -48,7 +49,6 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
 
 
     @SuppressWarnings("StatementWithEmptyBody")

@@ -23,13 +23,13 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.example.android.moviemasti.MovieAdapter;
-import com.example.android.moviemasti.MovieDetailedDataScrollingActivity;
 import com.example.android.moviemasti.R;
+import com.example.android.moviemasti.activities.MovieDetailedDataScrollingActivity;
+import com.example.android.moviemasti.adapters.MovieAdapter;
 import com.example.android.moviemasti.datamanipulation.JsonDataParsing;
-import com.example.android.moviemasti.datamanipulation.MovieData;
 import com.example.android.moviemasti.datamanipulation.Networking;
 import com.example.android.moviemasti.menusmanipulation.SortingMovieData;
+import com.example.android.moviemasti.pojo.MovieData;
 
 import org.json.JSONException;
 
@@ -45,11 +45,11 @@ import butterknife.ButterKnife;
 public class PopularMoviesFragment extends Fragment implements MovieAdapter.MovieOnClickItemHandler,
         LoaderManager.LoaderCallbacks<ArrayList<MovieData>> {
 
-    private final String POPULARITY_URL =
-            "https://api.themoviedb.org/3/movie/popular?api_key=532dfe3fbb248c4ecc6f42703334d18e";
     private static final String MOVIE_URL = "url";
     private static final int MOVIE_POPULARITY_LOADER = 2400;
     public static ArrayList<MovieData> arrayPopularList = null;
+    private final String POPULARITY_URL =
+            "https://api.themoviedb.org/3/movie/popular?api_key=532dfe3fbb248c4ecc6f42703334d18e";
     @BindView(R.id.popular_movie_data_rv)
     RecyclerView mRecyclerView;
     @BindView(R.id.action_error)
@@ -61,6 +61,7 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
     @BindView(R.id.main_framelayout)
     FrameLayout frameLayout;
     private MovieAdapter movieAdapter;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,13 +121,13 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
             @Override
             public ArrayList<MovieData> loadInBackground() {
                 try {
-                        ArrayList<MovieData> movieDataArrayList=null;
-                        String apiUrl = args.getString(MOVIE_URL);
-                        String jsonMovieResult = Networking.getJSONResponseFromUrl(apiUrl);
-                        if (jsonMovieResult != null) {
-                            movieDataArrayList = JsonDataParsing.getDataForPopularity(jsonMovieResult);
-                        }
-                        return movieDataArrayList;
+                    ArrayList<MovieData> movieDataArrayList = null;
+                    String apiUrl = args.getString(MOVIE_URL);
+                    String jsonMovieResult = Networking.getJSONResponseFromUrl(apiUrl);
+                    if (jsonMovieResult != null) {
+                        movieDataArrayList = JsonDataParsing.getDataForPopularity(jsonMovieResult);
+                    }
+                    return movieDataArrayList;
                 } catch (JSONException e) {
                     e.printStackTrace();
                     return null;
@@ -168,7 +169,7 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_sorting_movies,menu);
+        inflater.inflate(R.menu.menu_sorting_movies, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

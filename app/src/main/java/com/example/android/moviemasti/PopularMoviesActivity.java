@@ -15,9 +15,11 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.android.moviemasti.activities.MovieDetailedDataScrollingActivity;
+import com.example.android.moviemasti.adapters.MovieAdapter;
 import com.example.android.moviemasti.datamanipulation.JsonDataParsing;
-import com.example.android.moviemasti.datamanipulation.MovieData;
 import com.example.android.moviemasti.datamanipulation.Networking;
+import com.example.android.moviemasti.pojo.MovieData;
 
 import org.json.JSONException;
 
@@ -49,9 +51,9 @@ public class PopularMoviesActivity extends AppCompatActivity implements MovieAda
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-     //   setContentView(R.layout.activity_popular_movies);
+        //   setContentView(R.layout.activity_popular_movies);
         ButterKnife.bind(this);
-       // Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        // Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         //setSupportActionBar(myToolbar);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);

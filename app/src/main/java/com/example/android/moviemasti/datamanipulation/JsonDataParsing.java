@@ -1,5 +1,6 @@
 package com.example.android.moviemasti.datamanipulation;
 
+import com.example.android.moviemasti.pojo.MovieData;
 import com.example.android.moviemasti.pojo.MovieDetails;
 
 import org.json.JSONArray;
@@ -33,32 +34,32 @@ public class JsonDataParsing {
         return popularMoviesDataArray;
     }
 
-    public static ArrayList<MovieDetails> getVideoData(String jsonVideoData) throws JSONException{
+    public static ArrayList<MovieDetails> getVideoData(String jsonVideoData) throws JSONException {
 
         ArrayList<MovieDetails> movieVideoArray = new ArrayList<>();
         JSONObject videoDataJson = new JSONObject(jsonVideoData);
         JSONArray videoList = videoDataJson.getJSONArray("results");
-        for(int i=0 ; i<videoList.length() ; i++){
+        for (int i = 0; i < videoList.length(); i++) {
             JSONObject videoListItem = videoList.getJSONObject(i);
             String videoKey = videoListItem.getString("key");
             String videoName = videoListItem.getString("name");
             String videoSite = videoListItem.getString("site");
-            movieVideoArray.add(new MovieDetails(videoKey,videoName,videoSite,null,null,null));
+            movieVideoArray.add(new MovieDetails(videoKey, videoName, videoSite, null, null, null));
         }
         return movieVideoArray;
     }
 
-    public static ArrayList<MovieDetails> getReviewData(String jsonVideoData) throws JSONException{
+    public static ArrayList<MovieDetails> getReviewData(String jsonVideoData) throws JSONException {
 
         ArrayList<MovieDetails> movieReviewArray = new ArrayList<>();
         JSONObject videoDataJson = new JSONObject(jsonVideoData);
         JSONArray videoList = videoDataJson.getJSONArray("results");
-        for(int i=0 ; i<videoList.length() ; i++){
+        for (int i = 0; i < videoList.length(); i++) {
             JSONObject videoListItem = videoList.getJSONObject(i);
             String author = videoListItem.getString("author");
             String content = videoListItem.getString("content");
             String url = videoListItem.getString("url");
-            movieReviewArray.add(new MovieDetails(null,null,null,author,content,url));
+            movieReviewArray.add(new MovieDetails(null, null, null, author, content, url));
         }
         return movieReviewArray;
     }

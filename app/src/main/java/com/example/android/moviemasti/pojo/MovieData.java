@@ -1,4 +1,4 @@
-package com.example.android.moviemasti.datamanipulation;
+package com.example.android.moviemasti.pojo;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -28,7 +28,7 @@ public class MovieData implements Parcelable {
 
             //descending order
 
-            if (popularity2 > popularity1)
+            if (popularity2 >= popularity1)
                 return 1;
             else
                 return -1;
@@ -39,7 +39,7 @@ public class MovieData implements Parcelable {
         public int compare(MovieData o1, MovieData o2) {
             double rating1 = o1.getMovieVotes();
             double rating2 = o2.getMovieVotes();
-            if (rating2 > rating1)
+            if (rating2 >= rating1)
                 return 1;
             else
                 return -1;

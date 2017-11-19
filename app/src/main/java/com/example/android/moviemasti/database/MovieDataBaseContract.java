@@ -7,14 +7,14 @@ import android.provider.BaseColumns;
  * Created by soumyajit on 16/11/17.
  */
 
-public class MovieDataBaseContract  {
+public class MovieDataBaseContract {
 
     public static final String MOVIE_AUTHORITY = "com.example.android.moviemasti";
 
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://"+MOVIE_AUTHORITY);
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + MOVIE_AUTHORITY);
     public static final String PATH_TASKS = "favourite_movies";
 
-    public static final class MovieEntry implements BaseColumns{
+    public static final class MovieEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_TASKS).build();

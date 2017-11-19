@@ -19,30 +19,27 @@ import butterknife.ButterKnife;
  * Created by soumyajit on 16/11/17.
  */
 
-public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewHolder>{
+public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewHolder> {
 
+    public OnReviewItemClickHandler reviewItemClickHandler;
     private Context mContext;
     private ArrayList<MovieDetails> reviewArrayList;
-    public OnReviewItemClickHandler reviewItemClickHandler;
 
-    public ReviewsAdapter(Context context,OnReviewItemClickHandler clickHandler){
+    public ReviewsAdapter(Context context, OnReviewItemClickHandler clickHandler) {
         mContext = context;
         reviewItemClickHandler = clickHandler;
-    }
-    public interface OnReviewItemClickHandler{
-        void onClickReviewItem(String url);
     }
 
     @Override
     public ReviewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         return new ReviewHolder(LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.review_item,viewGroup,false));
+                .inflate(R.layout.review_item, viewGroup, false));
     }
 
     @Override
     public void onBindViewHolder(ReviewHolder holder, int position) {
         MovieDetails movieDetails = reviewArrayList.get(position);
-        if(movieDetails != null){
+        if (movieDetails != null) {
             String author = movieDetails.getReviewAuthor();
             String content = movieDetails.getReviewContent();
             String url = movieDetails.getReviewUrl();
@@ -53,19 +50,23 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewHo
 
     @Override
     public int getItemCount() {
-        if(reviewArrayList == null)
+        if (reviewArrayList == null)
             return 0;
         return reviewArrayList.size();
     }
 
     public void setArrayListReview(ArrayList<MovieDetails> data) {
-        if(data !=null){
+        if (data != null) {
             reviewArrayList = data;
             notifyDataSetChanged();
         }
     }
 
-    public class ReviewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public interface OnReviewItemClickHandler {
+        void onClickReviewItem(String url);
+    }
+
+    public class ReviewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.author_name)
         public TextView mAuthorTextView;
@@ -74,7 +75,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewHo
 
         public ReviewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }
 

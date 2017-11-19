@@ -2,7 +2,7 @@ package com.example.android.moviemasti.menusmanipulation;
 
 import android.util.Log;
 
-import com.example.android.moviemasti.datamanipulation.MovieData;
+import com.example.android.moviemasti.pojo.MovieData;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,7 +11,6 @@ import java.util.Collections;
  * Created by soumyajit on 28/9/17.
  */
 
-//still no use but will be using in future......
 
 public class SortingMovieData {
 

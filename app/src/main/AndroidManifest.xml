@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppThemeModify.NoActionBar">
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:theme="@style/AppThemeModify.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MovieDetailedDataScrollingActivity"
+            android:name=".activities.MovieDetailedDataScrollingActivity"
             android:label="@string/title_activity_movie_detailed_data_scrolling"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>

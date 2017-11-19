@@ -25,19 +25,17 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
     private Context mContext;
     private Cursor favouriteCursor;
     private OnClickFavouriteItemHandler clickFavouriteItemHandler;
-    public FavouriteAdapter(Context context,OnClickFavouriteItemHandler onClickFavouriteItemHandler){
+
+    public FavouriteAdapter(Context context, OnClickFavouriteItemHandler onClickFavouriteItemHandler) {
         mContext = context;
         clickFavouriteItemHandler = onClickFavouriteItemHandler;
 
     }
 
-    public interface OnClickFavouriteItemHandler{
-        void onFavoutiteItemClick(Cursor cursor);
-    }
     @Override
     public FavouriteHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new FavouriteHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.movie_items,parent,false));
+                .inflate(R.layout.movie_items, parent, false));
     }
 
     @Override
@@ -50,40 +48,45 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
                 .MovieEntry.COLUMN_MOVIE_RATING);
         int moviePosterPathIndex = favouriteCursor.getColumnIndex(MovieDataBaseContract
                 .MovieEntry.COLUMN_MOVIE_POSTER_PATH);
-        if(favouriteCursor.moveToPosition(position)){
+        if (favouriteCursor.moveToPosition(position)) {
             Long movieId = favouriteCursor.getLong(movieIdIndex);
             String movieTitle = favouriteCursor.getString(movieTitleIndex);
             float movieRating = favouriteCursor.getFloat(movieRatingIndex);
             String moviePosterPath = favouriteCursor.getString(moviePosterPathIndex);
-            Picasso.with(mContext).load("https://image.tmdb.org/t/p/w500"+moviePosterPath)
+            Picasso.with(mContext).load("https://image.tmdb.org/t/p/w500" + moviePosterPath)
                     .placeholder(R.drawable.placeholder3)
                     .error(R.drawable.placeholder3)
                     .into(holder.mImageView);
-            holder.ratingTextView.setText(String.valueOf(movieRating)+"/10");
+            holder.ratingTextView.setText(String.valueOf(movieRating) + "/10");
         }
     }
 
     @Override
     public int getItemCount() {
-        if(favouriteCursor == null)
-        return 0;
+        if (favouriteCursor == null)
+            return 0;
         else
             return favouriteCursor.getCount();
     }
 
-    public void swapCursor(Cursor cursor){
+    public void swapCursor(Cursor cursor) {
         favouriteCursor = cursor;
         notifyDataSetChanged();
     }
 
-    public class FavouriteHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public interface OnClickFavouriteItemHandler {
+        void onFavoutiteItemClick(Cursor cursor);
+    }
+
+    public class FavouriteHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.image_items)
         ImageView mImageView;
         @BindView(R.id.movie_rating)
         TextView ratingTextView;
+
         public FavouriteHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }
 
