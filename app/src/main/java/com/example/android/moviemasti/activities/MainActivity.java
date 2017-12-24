@@ -20,6 +20,8 @@ import com.example.android.moviemasti.fragmentsmanipulation.TopRatedMoviesFragme
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private int currentFragmentId ;
+    private final static String CURRENT_FRAGMENT_KEY = "current_fragment_key";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,12 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
-        setFragment(R.id.nav_popular_movies);
+        if(savedInstanceState != null){
+            int fragmentId = savedInstanceState.getInt(CURRENT_FRAGMENT_KEY);
+                setFragment(fragmentId);
+        }else {
+            setFragment(R.id.nav_popular_movies);
+        }
     }
 
     @Override
@@ -75,9 +82,21 @@ public class MainActivity extends AppCompatActivity
                 fragment = new TopRatedMoviesFragment();
                 break;
         }
+        currentFragmentId = id;
+        constructFragment(fragment);
+    }
+
+    public void constructFragment(Fragment fragment){
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.main_content, fragment)
                 .commit();
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(CURRENT_FRAGMENT_KEY,currentFragmentId);
+    }
+
 }
