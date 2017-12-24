@@ -51,10 +51,10 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
     private static final String MOVIE_URL = "url";
     private static final int MOVIE_POPULARITY_LOADER = 2400;
   //  private static final String SAVED_SUPER_STATE = "super-state";
-   // private static final String SAVED_LAYOUT_MANAGER = "layout-manager-state";
+   private static final String SAVED_LAYOUT_MANAGER = "layout-manager-state";
     public int positionIndex;
     public int topView;
-    public GridLayoutManager gridLayoutManager;
+    public RecyclerView.LayoutManager gridLayoutManager;
     public static ArrayList<MovieData> arrayPopularList = null;
     //TODO public final String API_KEY = "put your api key here";
     private final String POPULARITY_URL =
@@ -95,7 +95,7 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
         });
         loadMovieData(POPULARITY_URL);
         StatefulRecyclerView statefulRecyclerView = new StatefulRecyclerView(popularMoviesView.getContext());
-        mRecyclerView.setLayoutManager(gridLayoutManager);
+        statefulRecyclerView.setLayoutManager(gridLayoutManager);
         statefulRecyclerView.setAdapter(movieAdapter);
         return popularMoviesView;
     }
@@ -158,6 +158,7 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
             mRecyclerView.setVisibility(View.VISIBLE);
             movieAdapter.setpopularMoviesData(data);
             arrayPopularList = data;
+
         } else {
             mErrorLayout.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.INVISIBLE);
@@ -169,6 +170,7 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
     public void onLoaderReset(Loader<ArrayList<MovieData>> loader) {
 
     }
+
 
     @Override
     public void onClickItem(MovieData imageData) {
@@ -210,7 +212,7 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
         }
     }
 
-    @Override
+ /*   @Override
     public void onPause() {
         super.onPause();
         positionIndex= gridLayoutManager.findFirstVisibleItemPosition();
@@ -224,11 +226,10 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
         if (positionIndex!= -1) {
             gridLayoutManager.scrollToPositionWithOffset(positionIndex, topView);
         }
-    }
+    }*/
 
     public final class StatefulRecyclerView extends RecyclerView {
 
-        private static final String SAVED_SUPER_STATE = "super-state";
         private static final String SAVED_LAYOUT_MANAGER = "layout-manager-state";
         private Parcelable mLayoutManagerSavedState;
 
@@ -251,18 +252,16 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
 
         @Override
         protected Parcelable onSaveInstanceState() {
+            super.onSaveInstanceState();
             Bundle bundle = new Bundle();
-            bundle.putParcelable(SAVED_SUPER_STATE, super.onSaveInstanceState());
-            bundle.putParcelable(SAVED_LAYOUT_MANAGER, this.getLayoutManager().onSaveInstanceState());
+            bundle.putParcelable(SAVED_LAYOUT_MANAGER, mRecyclerView.getLayoutManager().onSaveInstanceState());
             return bundle;
         }
 
         @Override
         protected void onRestoreInstanceState(Parcelable state) {
             if (state instanceof Bundle) {
-                Bundle bundle = (Bundle) state;
-                mLayoutManagerSavedState = bundle.getParcelable(SAVED_LAYOUT_MANAGER);
-                state = bundle.getParcelable(SAVED_SUPER_STATE);
+                mLayoutManagerSavedState = ((Bundle) state).getParcelable(SAVED_LAYOUT_MANAGER);
             }
             super.onRestoreInstanceState(state);
         }
@@ -272,11 +271,16 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
          * <p>
          * <b>NOTE:</b> Must be called after adapter has been set.
          */
+
         private void restorePosition() {
-            if (mLayoutManagerSavedState != null) {
-                this.getLayoutManager().onRestoreInstanceState(mLayoutManagerSavedState);
-                mLayoutManagerSavedState = null;
+            if (gridLayoutManager != null) {
+                mRecyclerView.getLayoutManager().onRestoreInstanceState(mLayoutManagerSavedState);
             }
+        }
+
+        @Override
+        public void setLayoutManager(LayoutManager layout) {
+            mRecyclerView.setLayoutManager(layout);
         }
 
         @Override
