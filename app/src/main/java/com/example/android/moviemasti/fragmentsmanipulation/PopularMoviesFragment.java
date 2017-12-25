@@ -50,13 +50,13 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
 
     private static final String MOVIE_URL = "url";
     private static final int MOVIE_POPULARITY_LOADER = 2400;
-  //  private static final String SAVED_SUPER_STATE = "super-state";
-   private static final String SAVED_LAYOUT_MANAGER = "layout-manager-state";
+  //private static final String SAVED_SUPER_STATE = "super-state";
+    private static final String SAVED_LAYOUT_MANAGER = "layout-manager-state";
     public int positionIndex;
     public int topView;
     public RecyclerView.LayoutManager gridLayoutManager;
     public static ArrayList<MovieData> arrayPopularList = null;
-    //TODO public final String API_KEY = "put your api key here";
+   //TODO public final String API_KEY = "put your api key here";
     private final String POPULARITY_URL =
             "https://api.themoviedb.org/3/movie/popular?api_key=" + API_KEY;
     @BindView(R.id.popular_movie_data_rv)
@@ -83,9 +83,9 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
         View popularMoviesView = inflater.inflate(R.layout.activity_popular_movies, container, false);
         ButterKnife.bind(this, popularMoviesView);
         gridLayoutManager = new GridLayoutManager(popularMoviesView.getContext(), 2);
-        //mRecyclerView.setLayoutManager(gridLayoutManager);
+        mRecyclerView.setLayoutManager(gridLayoutManager);
         movieAdapter = new MovieAdapter(getActivity().getApplicationContext(), this);
-        //mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setHasFixedSize(true);
         //mRecyclerView.setAdapter(movieAdapter);
         mReloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,9 +94,16 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
             }
         });
         loadMovieData(POPULARITY_URL);
-        StatefulRecyclerView statefulRecyclerView = new StatefulRecyclerView(popularMoviesView.getContext());
-        statefulRecyclerView.setLayoutManager(gridLayoutManager);
-        statefulRecyclerView.setAdapter(movieAdapter);
+       // StatefulRecyclerView statefulRecyclerView = new StatefulRecyclerView(popularMoviesView.getContext());
+       // statefulRecyclerView.setLayoutManager(gridLayoutManager);
+        //statefulRecyclerView.setAdapter(movieAdapter);
+        if(savedInstanceState != null){
+            Parcelable state = savedInstanceState.getParcelable(SAVED_LAYOUT_MANAGER);
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(state);
+        }else {
+            mRecyclerView.setHasFixedSize(true);
+            mRecyclerView.setAdapter(movieAdapter);
+        }
         return popularMoviesView;
     }
 
@@ -158,7 +165,8 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
             mRecyclerView.setVisibility(View.VISIBLE);
             movieAdapter.setpopularMoviesData(data);
             arrayPopularList = data;
-
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(SAVED_LAYOUT_MANAGER, mRecyclerView.getLayoutManager().onSaveInstanceState());
         } else {
             mErrorLayout.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.INVISIBLE);
