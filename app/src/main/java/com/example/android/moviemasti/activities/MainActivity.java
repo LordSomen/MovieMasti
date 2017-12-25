@@ -1,7 +1,6 @@
 package com.example.android.moviemasti.activities;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -20,7 +19,7 @@ import com.example.android.moviemasti.fragmentsmanipulation.TopRatedMoviesFragme
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private int currentFragmentId ;
+    private Fragment currentFragmentId;
     private final static String CURRENT_FRAGMENT_KEY = "current_fragment_key";
 
     @Override
@@ -39,10 +38,10 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
-        if(savedInstanceState != null){
-            int fragmentId = savedInstanceState.getInt(CURRENT_FRAGMENT_KEY);
-                setFragment(fragmentId);
-        }else {
+        if (savedInstanceState != null) {
+            Fragment fragmentId = getFragmentManager().getFragment(savedInstanceState, CURRENT_FRAGMENT_KEY);
+            constructFragment(fragmentId);
+        } else {
             setFragment(R.id.nav_popular_movies);
         }
     }
@@ -82,13 +81,12 @@ public class MainActivity extends AppCompatActivity
                 fragment = new TopRatedMoviesFragment();
                 break;
         }
-        currentFragmentId = id;
+        currentFragmentId = fragment;
         constructFragment(fragment);
     }
 
-    public void constructFragment(Fragment fragment){
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
+    public void constructFragment(Fragment fragment) {
+        getFragmentManager().beginTransaction()
                 .replace(R.id.main_content, fragment)
                 .commit();
     }
@@ -96,7 +94,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(CURRENT_FRAGMENT_KEY,currentFragmentId);
+        if (getFragmentManager() != null)
+            getFragmentManager().putFragment(outState, CURRENT_FRAGMENT_KEY, currentFragmentId);
     }
 
 }
