@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.AsyncTaskLoader;
-import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.util.ArraySet;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -50,16 +48,14 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
 
     private static final String MOVIE_URL = "url";
     private static final int MOVIE_POPULARITY_LOADER = 2400;
-  //private static final String SAVED_SUPER_STATE = "super-state";
+    private static final String SAVED_ARRAYLIST = "saved_array_list";
     private static final String SAVED_LAYOUT_MANAGER = "layout-manager-state";
-    private Parcelable onSavedInstanceState = null;
-    public int positionIndex;
-    public int topView;
-    public RecyclerView.LayoutManager gridLayoutManager;
     public static ArrayList<MovieData> arrayPopularList = null;
-    public final String API_KEY = "532dfe3fbb248c4ecc6f42703334d18e";
+    //TODO public final String API_KEY = "put your api key here";
     private final String POPULARITY_URL =
             "https://api.themoviedb.org/3/movie/popular?api_key=" + API_KEY;
+
+    public RecyclerView.LayoutManager gridLayoutManager;
     @BindView(R.id.popular_movie_data_rv)
     RecyclerView mRecyclerView;
     @BindView(R.id.action_error)
@@ -70,12 +66,21 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
     Button mReloadButton;
     @BindView(R.id.main_framelayout)
     FrameLayout frameLayout;
+    private Parcelable onSavedInstanceState = null;
     private MovieAdapter movieAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            arrayPopularList = savedInstanceState.getParcelableArrayList(SAVED_ARRAYLIST);
+        }
     }
 
     @Nullable
@@ -95,7 +100,7 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
             }
         });
         loadMovieData(POPULARITY_URL);
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             onSavedInstanceState = savedInstanceState.getParcelable(SAVED_LAYOUT_MANAGER);
         }
         return popularMoviesView;
@@ -111,6 +116,7 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
         } else {
             loaderManager.restartLoader(MOVIE_POPULARITY_LOADER, movieBundle, this);
         }
+
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -156,9 +162,13 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
         if (data != null && data.size() != 0) {
             mErrorLayout.setVisibility(View.INVISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
-            movieAdapter.setpopularMoviesData(data);
-            arrayPopularList = data;
-            if(onSavedInstanceState != null){
+            if (arrayPopularList == null) {
+                movieAdapter.setpopularMoviesData(data);
+                arrayPopularList = data;
+            } else {
+                movieAdapter.setpopularMoviesData(arrayPopularList);
+            }
+            if (onSavedInstanceState != null) {
                 mRecyclerView.getLayoutManager().onRestoreInstanceState(onSavedInstanceState);
             }
         } else {
@@ -172,6 +182,10 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
     @Override
     public void onClickItem(MovieData imageData) {
@@ -213,90 +227,13 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
         }
     }
 
- /*   @Override
-    public void onPause() {
-        super.onPause();
-        positionIndex= gridLayoutManager.findFirstVisibleItemPosition();
-        View startView = mRecyclerView.getChildAt(0);
-        topView = (startView == null) ? 0 : (startView.getTop() - mRecyclerView.getPaddingTop());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (positionIndex!= -1) {
-            gridLayoutManager.scrollToPositionWithOffset(positionIndex, topView);
-        }
-    }*/
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(SAVED_LAYOUT_MANAGER,mRecyclerView.getLayoutManager().onSaveInstanceState());
+        outState.putParcelable(SAVED_LAYOUT_MANAGER, mRecyclerView.getLayoutManager()
+                .onSaveInstanceState());
+        outState.putParcelableArrayList(SAVED_ARRAYLIST, arrayPopularList);
     }
 
-    public final class StatefulRecyclerView extends RecyclerView {
 
-        private static final String SAVED_LAYOUT_MANAGER = "layout-manager-state";
-        private Parcelable mLayoutManagerSavedState;
-
-        public StatefulRecyclerView(Context context) {
-            super(context);
-        }
-
-        public StatefulRecyclerView(Context context, @Nullable AttributeSet attrs) {
-            super(context, attrs);
-        }
-
-        public StatefulRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
-            super(context, attrs, defStyle);
-        }
-
-        @Override
-        public RecyclerView.LayoutParams generateDefaultLayoutParams() {
-            return null;
-        }
-
-        @Override
-        protected Parcelable onSaveInstanceState() {
-            super.onSaveInstanceState();
-            Bundle bundle = new Bundle();
-            bundle.putParcelable(SAVED_LAYOUT_MANAGER, mRecyclerView.getLayoutManager().onSaveInstanceState());
-            return bundle;
-        }
-
-        @Override
-        protected void onRestoreInstanceState(Parcelable state) {
-            if (state instanceof Bundle) {
-                mLayoutManagerSavedState = ((Bundle) state).getParcelable(SAVED_LAYOUT_MANAGER);
-            }
-            super.onRestoreInstanceState(state);
-        }
-
-        /**
-         * Restores scroll position after configuration change.
-         * <p>
-         * <b>NOTE:</b> Must be called after adapter has been set.
-         */
-
-        private void restorePosition() {
-            if (gridLayoutManager != null) {
-                mRecyclerView.getLayoutManager().onRestoreInstanceState(mLayoutManagerSavedState);
-            }
-        }
-
-        @Override
-        public void setLayoutManager(LayoutManager layout) {
-            mRecyclerView.setLayoutManager(layout);
-        }
-
-        @Override
-        public void setAdapter(Adapter adapter) {
-            super.setAdapter(adapter);
-            if(mLayoutManagerSavedState!=null)
-                restorePosition();
-            else
-                mRecyclerView.setAdapter(adapter);
-        }
-    }
 }

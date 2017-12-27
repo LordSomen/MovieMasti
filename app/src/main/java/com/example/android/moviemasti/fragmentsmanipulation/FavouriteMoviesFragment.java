@@ -40,10 +40,10 @@ public class FavouriteMoviesFragment extends Fragment implements LoaderManager.L
         , FavouriteAdapter.OnClickFavouriteItemHandler {
 
     public static final int FAV_MOVIE_LOADER = 1216;
-    private static final String MOVIE_TAG = "sorting_tag";
-    private static final String TAG_RATE = "rate";
-    private static final String TAG_POPULARITY = "popularity";
+    private static final String MOVIE_TAG = "sorting_bundle";
     private final static String FAVOURITE_VALUE_KEY = "movieIntentData";
+    private static final String SORTING_STATE = "sorting_criteria";
+    private static String SORTING_TAG = "rating";
     @BindView(R.id.fav_framelayout)
     FrameLayout frameLayout;
     @BindView(R.id.favourite_movie_data_rv)
@@ -62,9 +62,17 @@ public class FavouriteMoviesFragment extends Fragment implements LoaderManager.L
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            SORTING_TAG = savedInstanceState.getString(SORTING_STATE);
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        getLoaderManager().restartLoader(FAV_MOVIE_LOADER, null, this);
+        loadMovieData(SORTING_TAG);
     }
 
     @Nullable
@@ -78,7 +86,12 @@ public class FavouriteMoviesFragment extends Fragment implements LoaderManager.L
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecyclerView.setAdapter(favouriteAdapter);
         getLoaderManager().initLoader(FAV_MOVIE_LOADER, null, this);
-        loadMovieData(TAG_RATE);
+        if (savedInstanceState != null) {
+            SORTING_TAG = savedInstanceState.getString(SORTING_STATE);
+            loadMovieData(SORTING_TAG);
+        } else {
+            loadMovieData(SORTING_TAG);
+        }
         return view;
     }
 
@@ -114,10 +127,12 @@ public class FavouriteMoviesFragment extends Fragment implements LoaderManager.L
 
             @Override
             public Cursor loadInBackground() {
+                String sortingOrder;
                 try {
-                    String sortingOrder = MovieDataBaseContract.MovieEntry.COLUMN_MOVIE_RATING + " DESC ";
-                    if (args != null && args.getString(MOVIE_TAG).equals(TAG_POPULARITY)) {
+                    if (args != null && args.getString(MOVIE_TAG).equals("popularity")) {
                         sortingOrder = MovieDataBaseContract.MovieEntry.COLUMN_MOVIE_POPULARITY + " DESC ";
+                    } else {
+                        sortingOrder = MovieDataBaseContract.MovieEntry.COLUMN_MOVIE_RATING + " DESC ";
                     }
                     return getContext().getContentResolver().query(MovieDataBaseContract.MovieEntry.CONTENT_URI,
                             null, null, null,
@@ -206,14 +221,16 @@ public class FavouriteMoviesFragment extends Fragment implements LoaderManager.L
         switch (menuItemId) {
             case R.id.menu_sorting_popularity:
                 if (dataCursor != null && dataCursor.getCount() > 1) {
-                    loadMovieData(TAG_POPULARITY);
+                    SORTING_TAG = "popularity";
+                    loadMovieData(SORTING_TAG);
                 } else {
                     Snackbar.make(frameLayout, "Sorting is not possible", Snackbar.LENGTH_LONG).show();
                 }
                 return true;
             case R.id.menu_sorting_rating:
                 if (dataCursor != null && dataCursor.getCount() > 1) {
-                    loadMovieData(TAG_RATE);
+                    SORTING_TAG = "rating";
+                    loadMovieData(SORTING_TAG);
                 } else {
                     Snackbar.make(frameLayout, "Sorting is not possible", Snackbar.LENGTH_LONG).show();
                 }
@@ -221,5 +238,11 @@ public class FavouriteMoviesFragment extends Fragment implements LoaderManager.L
             default:
                 return super.onOptionsItemSelected(menuItem);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(SORTING_STATE, SORTING_TAG);
     }
 }

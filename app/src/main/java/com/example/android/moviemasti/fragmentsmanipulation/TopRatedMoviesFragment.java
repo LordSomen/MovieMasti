@@ -47,8 +47,9 @@ public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.Mov
 
     private static final String MOVIE_URL = "url";
     private static final int MOVIE_POPULARITY_LOADER = 2400;
-    public static ArrayList<MovieData> arrayTopRatedList;
-    public final String API_KEY = "532dfe3fbb248c4ecc6f42703334d18e";
+    private static final String SAVED_ARRAYLIST = "saved_array_list";
+    public static ArrayList<MovieData> arrayTopRatedList = null;
+    //TODO public final String API_KEY = "put your api key here";
     private final String TOP_RATED_URL =
             "https://api.themoviedb.org/3/movie/top_rated?api_key=" + API_KEY;
     @BindView(R.id.popular_movie_data_rv)
@@ -67,6 +68,15 @@ public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.Mov
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            arrayTopRatedList = savedInstanceState.getParcelableArrayList(SAVED_ARRAYLIST);
+        }
     }
 
     @Nullable
@@ -144,8 +154,12 @@ public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.Mov
         if (data != null && data.size() != 0) {
             mErrorLayout.setVisibility(View.INVISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
-            movieAdapter.setpopularMoviesData(data);
-            arrayTopRatedList = data;
+            if (arrayTopRatedList == null) {
+                movieAdapter.setpopularMoviesData(data);
+                arrayTopRatedList = data;
+            } else {
+                movieAdapter.setpopularMoviesData(arrayTopRatedList);
+            }
         } else {
             mErrorLayout.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.INVISIBLE);
@@ -199,6 +213,10 @@ public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.Mov
         }
     }
 
-
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(SAVED_ARRAYLIST, arrayTopRatedList);
+    }
 }
 
