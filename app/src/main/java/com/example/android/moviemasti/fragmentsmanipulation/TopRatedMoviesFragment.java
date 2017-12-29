@@ -7,11 +7,13 @@ import android.content.AsyncTaskLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.util.ArraySet;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,10 +50,12 @@ public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.Mov
     private static final String MOVIE_URL = "url";
     private static final int MOVIE_POPULARITY_LOADER = 2400;
     private static final String SAVED_ARRAYLIST = "saved_array_list";
+    private static final String SAVED_LAYOUT_MANAGER = "layout-manager-state";
     public static ArrayList<MovieData> arrayTopRatedList = null;
-    //TODO public final String API_KEY = "put your api key here";
+    public final String API_KEY = "532dfe3fbb248c4ecc6f42703334d18e";
     private final String TOP_RATED_URL =
             "https://api.themoviedb.org/3/movie/top_rated?api_key=" + API_KEY;
+    private Parcelable onSavedInstanceState = null;
     @BindView(R.id.popular_movie_data_rv)
     RecyclerView mRecyclerView;
     @BindView(R.id.action_error)
@@ -81,10 +85,13 @@ public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.Mov
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View popularMoviesView = inflater.inflate(R.layout.activity_popular_movies, container, false);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             Bundle savedInstanceState) {
+        View popularMoviesView = inflater.inflate(R.layout.activity_popular_movies, container,
+                false);
         ButterKnife.bind(this, popularMoviesView);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(popularMoviesView.getContext(), 2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(popularMoviesView.getContext(),
+                numberOfColumns());
         mRecyclerView.setLayoutManager(gridLayoutManager);
         movieAdapter = new MovieAdapter(getActivity().getApplicationContext(), this);
         mRecyclerView.setHasFixedSize(true);
@@ -96,6 +103,9 @@ public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.Mov
             }
         });
         loadMovieData(TOP_RATED_URL);
+        if (savedInstanceState != null) {
+            onSavedInstanceState = savedInstanceState.getParcelable(SAVED_LAYOUT_MANAGER);
+        }
         return popularMoviesView;
     }
 
@@ -160,6 +170,9 @@ public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.Mov
             } else {
                 movieAdapter.setpopularMoviesData(arrayTopRatedList);
             }
+            if (onSavedInstanceState != null) {
+                mRecyclerView.getLayoutManager().onRestoreInstanceState(onSavedInstanceState);
+            }
         } else {
             mErrorLayout.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.INVISIBLE);
@@ -172,6 +185,16 @@ public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.Mov
 
     }
 
+    private int numberOfColumns() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        // You can change this divider to adjust the size of the poster
+        int widthDivider = 400;
+        int width = displayMetrics.widthPixels;
+        int nColumns = width / widthDivider;
+        if (nColumns < 2) return 2;
+        return nColumns;
+    }
 
     @Override
     public void onClickItem(MovieData imageData) {
@@ -216,6 +239,8 @@ public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.Mov
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putParcelable(SAVED_LAYOUT_MANAGER, mRecyclerView.getLayoutManager()
+                .onSaveInstanceState());
         outState.putParcelableArrayList(SAVED_ARRAYLIST, arrayTopRatedList);
     }
 }

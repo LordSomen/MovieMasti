@@ -9,8 +9,10 @@ import android.content.Intent;
 import android.content.Loader;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,7 +51,13 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
     private final static String MOVIE_REVIEW_CALL = "reviews";
     private final static String MOVIE_URL = "https://api.themoviedb.org/3/movie/";
     private final static String MOVIE_API = "?api_key=532dfe3fbb248c4ecc6f42703334d18e";
+    private final static String ARTICLE_SCROLL_POSITION = "article_scroll_position";
+    private static final String SAVED_LAYOUT_MANAGER = "layout-manager-state";
+    private Parcelable onSavedInstanceState = null;
+
     @SuppressWarnings("FieldCanBeLocal")
+    @BindView(R.id.movie_details_scrollview)
+    NestedScrollView nestedScrollView;
     @BindView(R.id.content_text)
     TextView mContentTextView;
     @BindView(R.id.app_bar)
@@ -140,10 +148,14 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
         videoRecyclerView.setAdapter(videoAdapter);
         reviewRecyclerView.setLayoutManager(linearLayoutManager2);
         reviewRecyclerView.setAdapter(reviewsAdapter);
+
         String movieVideoUrl = MOVIE_URL + movieId + "/" + MOVIE_VIDEO_CALL + MOVIE_API;
         String movieReviewUrl = MOVIE_URL + movieId + "/" + MOVIE_REVIEW_CALL + MOVIE_API;
         loadData(movieVideoUrl, MOVIE_VIDEO_LOADER);
         loadData(movieReviewUrl, MOVIE_REVIEW_LOADER);
+        if (savedInstanceState != null) {
+            onSavedInstanceState = savedInstanceState.getParcelable(SAVED_LAYOUT_MANAGER);
+        }
     }
 
     public void loadingMovieBackDropImage(String imgUrlPartBackDrop) {
@@ -234,6 +246,9 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
                 reviewRecyclerView.setVisibility(View.GONE);
             }
         }
+        if (onSavedInstanceState != null) {
+            videoRecyclerView.getLayoutManager().onRestoreInstanceState(onSavedInstanceState);
+        }
     }
 
     @Override
@@ -290,4 +305,26 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
         if (intent.resolveActivity(getPackageManager()) != null)
             startActivity(intent);
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putIntArray(ARTICLE_SCROLL_POSITION,
+                new int[]{ nestedScrollView.getScrollX(), nestedScrollView.getScrollY()});
+        outState.putParcelable(SAVED_LAYOUT_MANAGER, videoRecyclerView.getLayoutManager()
+                .onSaveInstanceState());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        final int[] position = savedInstanceState.getIntArray(ARTICLE_SCROLL_POSITION);
+        if(position != null)
+            nestedScrollView.post(new Runnable() {
+                public void run() {
+                    nestedScrollView.scrollTo(position[0], position[1]);
+                }
+            });
+    }
+
 }

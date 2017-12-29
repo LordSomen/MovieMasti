@@ -8,10 +8,12 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,6 +46,8 @@ public class FavouriteMoviesFragment extends Fragment implements LoaderManager.L
     private final static String FAVOURITE_VALUE_KEY = "movieIntentData";
     private static final String SORTING_STATE = "sorting_criteria";
     private static String SORTING_TAG = "rating";
+    private static final String SAVED_LAYOUT_MANAGER = "layout-manager-state";
+    private Parcelable onSavedInstanceState = null;
     @BindView(R.id.fav_framelayout)
     FrameLayout frameLayout;
     @BindView(R.id.favourite_movie_data_rv)
@@ -81,8 +85,10 @@ public class FavouriteMoviesFragment extends Fragment implements LoaderManager.L
 
         View view = inflater.inflate(R.layout.favourite_fragment, container, false);
         ButterKnife.bind(this, view);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 2);
-        favouriteAdapter = new FavouriteAdapter(getActivity().getApplicationContext(), this);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity()
+                .getApplicationContext(), numberOfColumns());
+        favouriteAdapter = new FavouriteAdapter(getActivity().getApplicationContext(),
+                this);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecyclerView.setAdapter(favouriteAdapter);
         getLoaderManager().initLoader(FAV_MOVIE_LOADER, null, this);
@@ -91,6 +97,9 @@ public class FavouriteMoviesFragment extends Fragment implements LoaderManager.L
             loadMovieData(SORTING_TAG);
         } else {
             loadMovieData(SORTING_TAG);
+        }
+        if (savedInstanceState != null) {
+            onSavedInstanceState = savedInstanceState.getParcelable(SAVED_LAYOUT_MANAGER);
         }
         return view;
     }
@@ -160,6 +169,9 @@ public class FavouriteMoviesFragment extends Fragment implements LoaderManager.L
                 favouriteAdapter.swapCursor(data);
             dataCursor = data;
             Log.i("Favourite", "Count " + dataCursor.getCount());
+            if (onSavedInstanceState != null) {
+                mRecyclerView.getLayoutManager().onRestoreInstanceState(onSavedInstanceState);
+            }
 
         } else {
             mRecyclerView.setVisibility(View.INVISIBLE);
@@ -170,6 +182,17 @@ public class FavouriteMoviesFragment extends Fragment implements LoaderManager.L
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    private int numberOfColumns() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        // You can change this divider to adjust the size of the poster
+        int widthDivider = 400;
+        int width = displayMetrics.widthPixels;
+        int nColumns = width / widthDivider;
+        if (nColumns < 2) return 2;
+        return nColumns;
     }
 
     @Override
@@ -243,6 +266,8 @@ public class FavouriteMoviesFragment extends Fragment implements LoaderManager.L
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putParcelable(SAVED_LAYOUT_MANAGER, mRecyclerView.getLayoutManager()
+                .onSaveInstanceState());
         outState.putString(SORTING_STATE, SORTING_TAG);
     }
 }

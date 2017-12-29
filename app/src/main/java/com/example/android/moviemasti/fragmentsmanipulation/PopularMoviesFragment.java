@@ -13,6 +13,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.util.ArraySet;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,7 +52,7 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
     private static final String SAVED_ARRAYLIST = "saved_array_list";
     private static final String SAVED_LAYOUT_MANAGER = "layout-manager-state";
     public static ArrayList<MovieData> arrayPopularList = null;
-    //TODO public final String API_KEY = "put your api key here";
+    public final String API_KEY = "532dfe3fbb248c4ecc6f42703334d18e";
     private final String POPULARITY_URL =
             "https://api.themoviedb.org/3/movie/popular?api_key=" + API_KEY;
 
@@ -88,7 +89,7 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View popularMoviesView = inflater.inflate(R.layout.activity_popular_movies, container, false);
         ButterKnife.bind(this, popularMoviesView);
-        gridLayoutManager = new GridLayoutManager(popularMoviesView.getContext(), 2);
+        gridLayoutManager = new GridLayoutManager(popularMoviesView.getContext(), numberOfColumns());
         mRecyclerView.setLayoutManager(gridLayoutManager);
         movieAdapter = new MovieAdapter(getActivity().getApplicationContext(), this);
         mRecyclerView.setHasFixedSize(true);
@@ -181,7 +182,16 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
     public void onLoaderReset(Loader<ArrayList<MovieData>> loader) {
 
     }
-
+    private int numberOfColumns() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        // You can change this divider to adjust the size of the poster
+        int widthDivider = 400;
+        int width = displayMetrics.widthPixels;
+        int nColumns = width / widthDivider;
+        if (nColumns < 2) return 2;
+        return nColumns;
+    }
     @Override
     public void onResume() {
         super.onResume();
