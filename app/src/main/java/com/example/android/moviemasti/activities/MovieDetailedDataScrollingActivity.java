@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-
 public class MovieDetailedDataScrollingActivity extends AppCompatActivity implements
         LoaderCallbacks<ArrayList<MovieDetails>>, VideoAdapter.OnVideoClickHandler,
         ReviewsAdapter.OnReviewItemClickHandler {
@@ -52,8 +51,11 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
     private final static String MOVIE_URL = "https://api.themoviedb.org/3/movie/";
     private final static String MOVIE_API = "?api_key=532dfe3fbb248c4ecc6f42703334d18e";
     private final static String ARTICLE_SCROLL_POSITION = "article_scroll_position";
-    private static final String SAVED_LAYOUT_MANAGER = "layout-manager-state";
-    private Parcelable onSavedInstanceState = null;
+    private static final String SAVED_LAYOUT_MANAGER_VIDEO = "layout-manager-state-video";
+    private static final String SAVED_LAYOUT_MANAGER_REVIEW = "layout-manager-state-review";
+    private Parcelable onSavedInstanceStateVideo = null;
+    private Parcelable onSavedInstanceStateReview = null;
+    private int[] scrollPosition = null;
 
     @SuppressWarnings("FieldCanBeLocal")
     @BindView(R.id.movie_details_scrollview)
@@ -148,13 +150,14 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
         videoRecyclerView.setAdapter(videoAdapter);
         reviewRecyclerView.setLayoutManager(linearLayoutManager2);
         reviewRecyclerView.setAdapter(reviewsAdapter);
-
+        nestedScrollView.setSmoothScrollingEnabled(true);
         String movieVideoUrl = MOVIE_URL + movieId + "/" + MOVIE_VIDEO_CALL + MOVIE_API;
         String movieReviewUrl = MOVIE_URL + movieId + "/" + MOVIE_REVIEW_CALL + MOVIE_API;
         loadData(movieVideoUrl, MOVIE_VIDEO_LOADER);
         loadData(movieReviewUrl, MOVIE_REVIEW_LOADER);
         if (savedInstanceState != null) {
-            onSavedInstanceState = savedInstanceState.getParcelable(SAVED_LAYOUT_MANAGER);
+            onSavedInstanceStateVideo = savedInstanceState.getParcelable(SAVED_LAYOUT_MANAGER_VIDEO);
+            onSavedInstanceStateReview = savedInstanceState.getParcelable(SAVED_LAYOUT_MANAGER_REVIEW);
         }
     }
 
@@ -233,9 +236,15 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
             if (loader.getId() == MOVIE_VIDEO_LOADER) {
                 videoAdapter.setArrayList(data);
                 mTrailerErrorTextView.setVisibility(View.GONE);
+                if (onSavedInstanceStateVideo != null) {
+                    videoRecyclerView.getLayoutManager().onRestoreInstanceState(onSavedInstanceStateVideo);
+                }
             } else if (loader.getId() == MOVIE_REVIEW_LOADER) {
                 reviewsAdapter.setArrayListReview(data);
                 mReviewErrorTextView.setVisibility(View.GONE);
+                if (onSavedInstanceStateReview != null) {
+                    reviewRecyclerView.getLayoutManager().onRestoreInstanceState(onSavedInstanceStateReview);
+                }
             }
         } else {
             if (loader.getId() == MOVIE_VIDEO_LOADER) {
@@ -246,16 +255,12 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
                 reviewRecyclerView.setVisibility(View.GONE);
             }
         }
-        if (onSavedInstanceState != null) {
-            videoRecyclerView.getLayoutManager().onRestoreInstanceState(onSavedInstanceState);
-        }
     }
 
     @Override
     public void onLoaderReset(Loader<ArrayList<MovieDetails>> loader) {
 
     }
-
 
     @Override
     public void onVideoClick(String key, Context context) {
@@ -310,21 +315,23 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putIntArray(ARTICLE_SCROLL_POSITION,
-                new int[]{ nestedScrollView.getScrollX(), nestedScrollView.getScrollY()});
-        outState.putParcelable(SAVED_LAYOUT_MANAGER, videoRecyclerView.getLayoutManager()
+                new int[]{nestedScrollView.getScrollX(), nestedScrollView.getScrollY()});
+        outState.putParcelable(SAVED_LAYOUT_MANAGER_VIDEO, videoRecyclerView.getLayoutManager()
+                .onSaveInstanceState());
+        outState.putParcelable(SAVED_LAYOUT_MANAGER_REVIEW, reviewRecyclerView.getLayoutManager()
                 .onSaveInstanceState());
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        final int[] position = savedInstanceState.getIntArray(ARTICLE_SCROLL_POSITION);
-        if(position != null)
+        if (scrollPosition == null) {
+            scrollPosition = savedInstanceState.getIntArray(ARTICLE_SCROLL_POSITION);
             nestedScrollView.post(new Runnable() {
                 public void run() {
-                    nestedScrollView.scrollTo(position[0], position[1]);
+                    nestedScrollView.scrollTo(scrollPosition[0], scrollPosition[1]);
                 }
             });
+        }
     }
-
 }
