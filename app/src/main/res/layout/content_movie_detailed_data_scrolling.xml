@@ -93,7 +93,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="10dp"
-        android:nestedScrollingEnabled="false"/>
+        />
 
     <TextView
         android:id="@+id/error_trailers"
@@ -123,8 +123,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/layout_bg"
-        android:nestedScrollingEnabled="false"/>
+        android:background="@drawable/layout_bg" />
 
     <TextView
         android:id="@+id/error_reviews"

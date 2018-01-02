@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +21,7 @@ import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.android.moviemasti.R;
@@ -59,7 +59,7 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
 
     @SuppressWarnings("FieldCanBeLocal")
     @BindView(R.id.movie_details_scrollview)
-    NestedScrollView nestedScrollView;
+    ScrollView scrollView;
     @BindView(R.id.content_text)
     TextView mContentTextView;
     @BindView(R.id.app_bar)
@@ -150,7 +150,7 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
         videoRecyclerView.setAdapter(videoAdapter);
         reviewRecyclerView.setLayoutManager(linearLayoutManager2);
         reviewRecyclerView.setAdapter(reviewsAdapter);
-        nestedScrollView.setSmoothScrollingEnabled(true);
+        scrollView.setSmoothScrollingEnabled(true);
         String movieVideoUrl = MOVIE_URL + movieId + "/" + MOVIE_VIDEO_CALL + MOVIE_API;
         String movieReviewUrl = MOVIE_URL + movieId + "/" + MOVIE_REVIEW_CALL + MOVIE_API;
         loadData(movieVideoUrl, MOVIE_VIDEO_LOADER);
@@ -315,7 +315,7 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putIntArray(ARTICLE_SCROLL_POSITION,
-                new int[]{nestedScrollView.getScrollX(), nestedScrollView.getScrollY()});
+                new int[]{scrollView.getScrollX(), scrollView.getScrollY()});
         outState.putParcelable(SAVED_LAYOUT_MANAGER_VIDEO, videoRecyclerView.getLayoutManager()
                 .onSaveInstanceState());
         outState.putParcelable(SAVED_LAYOUT_MANAGER_REVIEW, reviewRecyclerView.getLayoutManager()
@@ -325,11 +325,11 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        if (scrollPosition == null) {
-            scrollPosition = savedInstanceState.getIntArray(ARTICLE_SCROLL_POSITION);
-            nestedScrollView.post(new Runnable() {
+        scrollPosition = savedInstanceState.getIntArray(ARTICLE_SCROLL_POSITION);
+        if (scrollPosition != null) {
+            scrollView.post(new Runnable() {
                 public void run() {
-                    nestedScrollView.scrollTo(scrollPosition[0], scrollPosition[1]);
+                    scrollView.scrollTo(scrollPosition[0], scrollPosition[1]);
                 }
             });
         }
