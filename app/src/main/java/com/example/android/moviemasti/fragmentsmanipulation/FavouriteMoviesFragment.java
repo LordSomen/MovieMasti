@@ -45,9 +45,8 @@ public class FavouriteMoviesFragment extends Fragment implements LoaderManager.L
     private static final String MOVIE_TAG = "sorting_bundle";
     private final static String FAVOURITE_VALUE_KEY = "movieIntentData";
     private static final String SORTING_STATE = "sorting_criteria";
-    private static String SORTING_TAG = "rating";
     private static final String SAVED_LAYOUT_MANAGER = "layout-manager-state";
-    private Parcelable onSavedInstanceState = null;
+    private static String SORTING_TAG = "rating";
     @BindView(R.id.fav_framelayout)
     FrameLayout frameLayout;
     @BindView(R.id.favourite_movie_data_rv)
@@ -56,6 +55,7 @@ public class FavouriteMoviesFragment extends Fragment implements LoaderManager.L
     TextView mErrorTextView;
     @BindView(R.id.favourite_progress_bar)
     ProgressBar mProgressbar;
+    private Parcelable onSavedInstanceState = null;
     private Cursor dataCursor = null;
     private FavouriteAdapter favouriteAdapter;
 

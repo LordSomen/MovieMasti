@@ -53,10 +53,6 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
     private final static String ARTICLE_SCROLL_POSITION = "article_scroll_position";
     private static final String SAVED_LAYOUT_MANAGER_VIDEO = "layout-manager-state-video";
     private static final String SAVED_LAYOUT_MANAGER_REVIEW = "layout-manager-state-review";
-    private Parcelable onSavedInstanceStateVideo = null;
-    private Parcelable onSavedInstanceStateReview = null;
-    private int[] scrollPosition = null;
-
     @SuppressWarnings("FieldCanBeLocal")
     @BindView(R.id.movie_details_scrollview)
     ScrollView scrollView;
@@ -84,6 +80,9 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
     TextView mTrailerErrorTextView;
     @BindView(R.id.error_reviews)
     TextView mReviewErrorTextView;
+    private Parcelable onSavedInstanceStateVideo = null;
+    private Parcelable onSavedInstanceStateReview = null;
+    private int[] scrollPosition = null;
     private String movieTitle;
     private VideoAdapter videoAdapter;
     private ReviewsAdapter reviewsAdapter;
@@ -156,6 +155,7 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
         loadData(movieVideoUrl, MOVIE_VIDEO_LOADER);
         loadData(movieReviewUrl, MOVIE_REVIEW_LOADER);
         if (savedInstanceState != null) {
+            onRestoreInstanceState(savedInstanceState);
             onSavedInstanceStateVideo = savedInstanceState.getParcelable(SAVED_LAYOUT_MANAGER_VIDEO);
             onSavedInstanceStateReview = savedInstanceState.getParcelable(SAVED_LAYOUT_MANAGER_REVIEW);
         }
@@ -327,11 +327,11 @@ public class MovieDetailedDataScrollingActivity extends AppCompatActivity implem
         super.onRestoreInstanceState(savedInstanceState);
         scrollPosition = savedInstanceState.getIntArray(ARTICLE_SCROLL_POSITION);
         if (scrollPosition != null) {
-            scrollView.post(new Runnable() {
+            scrollView.postDelayed(new Runnable() {
                 public void run() {
                     scrollView.scrollTo(scrollPosition[0], scrollPosition[1]);
                 }
-            });
+            }, 100);
         }
     }
 }

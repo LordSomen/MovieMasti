@@ -52,7 +52,7 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
     private static final String SAVED_ARRAYLIST = "saved_array_list";
     private static final String SAVED_LAYOUT_MANAGER = "layout-manager-state";
     public static ArrayList<MovieData> arrayPopularList = null;
-    public final String API_KEY = "532dfe3fbb248c4ecc6f42703334d18e";
+    //TODO public final String API_KEY = "please put your api key here";
     private final String POPULARITY_URL =
             "https://api.themoviedb.org/3/movie/popular?api_key=" + API_KEY;
 
@@ -182,6 +182,7 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
     public void onLoaderReset(Loader<ArrayList<MovieData>> loader) {
 
     }
+
     private int numberOfColumns() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -192,6 +193,7 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
         if (nColumns < 2) return 2;
         return nColumns;
     }
+
     @Override
     public void onResume() {
         super.onResume();

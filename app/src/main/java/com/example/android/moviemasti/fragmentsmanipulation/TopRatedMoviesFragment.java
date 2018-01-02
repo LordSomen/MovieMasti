@@ -52,10 +52,9 @@ public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.Mov
     private static final String SAVED_ARRAYLIST = "saved_array_list";
     private static final String SAVED_LAYOUT_MANAGER = "layout-manager-state";
     public static ArrayList<MovieData> arrayTopRatedList = null;
-    public final String API_KEY = "532dfe3fbb248c4ecc6f42703334d18e";
+    //TODO public final String API_KEY = "please put your api key here";
     private final String TOP_RATED_URL =
             "https://api.themoviedb.org/3/movie/top_rated?api_key=" + API_KEY;
-    private Parcelable onSavedInstanceState = null;
     @BindView(R.id.popular_movie_data_rv)
     RecyclerView mRecyclerView;
     @BindView(R.id.action_error)
@@ -66,6 +65,7 @@ public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.Mov
     Button mReloadButton;
     @BindView(R.id.main_framelayout)
     FrameLayout frameLayout;
+    private Parcelable onSavedInstanceState = null;
     private MovieAdapter movieAdapter;
 
     @Override
