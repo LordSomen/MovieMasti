@@ -3,6 +3,7 @@ package com.example.android.moviemasti.utils;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.widget.Toast;
 
 import com.example.android.moviemasti.database.MovieDataBaseContract;
 
@@ -49,6 +50,7 @@ public class Favourite {
             contentValues.put(MovieDataBaseContract.MovieEntry.COLUMN_MOVIE_RELEASE_DATE, releaseDate);
 
             context.getContentResolver().insert(MovieDataBaseContract.MovieEntry.CONTENT_URI, contentValues);
+            Toast.makeText(context, "item is marked as favourite", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -57,6 +59,9 @@ public class Favourite {
         if (isMovieFav(context, movieId)) {
             int deleted = context.getContentResolver().delete(MovieDataBaseContract.MovieEntry.CONTENT_URI,
                     MovieDataBaseContract.MovieEntry.COLUMN_MOVIE_ID + " = " + movieId, null);
+            if(deleted==1){
+                Toast.makeText(context, "item is removed from favourite", Toast.LENGTH_SHORT).show();
+            }
         }
 
     }
