@@ -52,7 +52,7 @@ public class TopRatedMoviesFragment extends Fragment implements MovieAdapter.Mov
     private static final String SAVED_ARRAYLIST = "saved_array_list";
     private static final String SAVED_LAYOUT_MANAGER = "layout-manager-state";
     public static ArrayList<MovieData> arrayTopRatedList = null;
-    //TODO public final String API_KEY = "please put your api key here";
+    public final String API_KEY = "532dfe3fbb248c4ecc6f42703334d18e";
     private final String TOP_RATED_URL =
             "https://api.themoviedb.org/3/movie/top_rated?api_key=" + API_KEY;
     @BindView(R.id.popular_movie_data_rv)

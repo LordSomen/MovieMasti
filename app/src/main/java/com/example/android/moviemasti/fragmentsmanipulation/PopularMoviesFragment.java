@@ -52,7 +52,7 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
     private static final String SAVED_ARRAYLIST = "saved_array_list";
     private static final String SAVED_LAYOUT_MANAGER = "layout-manager-state";
     public static ArrayList<MovieData> arrayPopularList = null;
-    //TODO public final String API_KEY = "please put your api key here";
+    public final String API_KEY = "532dfe3fbb248c4ecc6f42703334d18e";
     private final String POPULARITY_URL =
             "https://api.themoviedb.org/3/movie/popular?api_key=" + API_KEY;
 
@@ -117,7 +117,6 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
         } else {
             loaderManager.restartLoader(MOVIE_POPULARITY_LOADER, movieBundle, this);
         }
-
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -246,6 +245,5 @@ public class PopularMoviesFragment extends Fragment implements MovieAdapter.Movi
                 .onSaveInstanceState());
         outState.putParcelableArrayList(SAVED_ARRAYLIST, arrayPopularList);
     }
-
 
 }
